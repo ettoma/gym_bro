@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-import 'global/colours.dart';
+import 'global/theme_provider.dart';
 import 'views/home.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => ThemeProvider(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -16,21 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Gym Bro',
-      darkTheme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: ColorPalette.darkThemeBG,
-        ),
-        colorScheme: ColorScheme.fromSwatch(
-          backgroundColor: ColorPalette.primaryYellowBG,
-        ),
-      ),
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: ColorPalette.primaryYellowBG,
-        ),
-        fontFamily: GoogleFonts.notoSansMono().fontFamily,
-        useMaterial3: true,
-      ),
+      darkTheme: Provider.of<ThemeProvider>(context).darkMode,
+      theme: Provider.of<ThemeProvider>(context).lightMode,
       home: const Home(),
     );
   }
