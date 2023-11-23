@@ -3,8 +3,15 @@ class PageNames {
   static const String logs = 'logs';
   static const String profile = 'profile';
   static const String quickStart = 'quick start';
+  static const String workoutBuilder = 'workout builder';
 
-  static const List<String> names = [myWorkouts, logs, profile, quickStart];
+  static const List<String> names = [
+    myWorkouts,
+    logs,
+    profile,
+    quickStart,
+    workoutBuilder
+  ];
 }
 
 class ExerciseNames {

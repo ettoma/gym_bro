@@ -14,10 +14,11 @@ class PageTile extends StatelessWidget {
       width: 100,
       margin: const EdgeInsets.all(10),
       child: TextButton(
-        style: Theme.of(context)
-            .textButtonTheme
-            .style!
-            .copyWith(alignment: Alignment.centerRight),
+        style: Theme.of(context).textButtonTheme.style!.copyWith(
+            alignment: Alignment.centerRight,
+            foregroundColor: pageTitle == 'quick start'
+                ? MaterialStateColor.resolveWith((states) => Colors.red)
+                : null),
         onPressed: () {
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => _switchPage(pageTitle)));

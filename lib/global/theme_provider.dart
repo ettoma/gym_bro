@@ -9,6 +9,7 @@ class ThemeProvider extends ChangeNotifier {
     bottomAppBarTheme: const BottomAppBarTheme(
       color: ColorPalette.lightBG,
     ),
+    textTheme: textThemeBase,
     textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
             textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
@@ -32,6 +33,7 @@ class ThemeProvider extends ChangeNotifier {
     appBarTheme: const AppBarTheme(
       backgroundColor: ColorPalette.darkBG,
     ),
+    textTheme: textThemeBase,
     textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
             textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
@@ -46,3 +48,5 @@ class ThemeProvider extends ChangeNotifier {
     useMaterial3: true,
   );
 }
+
+TextTheme textThemeBase = TextTheme(headlineMedium: TextStyle(fontSize: 40));
