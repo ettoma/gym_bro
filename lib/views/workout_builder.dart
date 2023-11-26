@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
+import 'package:gym_bro/widgets/exercise_picker.dart';
 import 'package:gym_bro/widgets/exercise_tile.dart';
 
 import '../global/text.dart';
@@ -39,31 +40,39 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                 .copyWith(fontSize: 20),
             textAlign: TextAlign.center,
             decoration: const InputDecoration(
-                hintText: 'workout title', hintStyle: TextStyle(fontSize: 16)),
+                hintText: HelperText.workoutTitle,
+                hintStyle: TextStyle(fontSize: 16)),
             controller: workoutTitleController,
           ),
           Column(
             children: exerciseList,
           ),
           Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 3),
-                borderRadius: BorderRadius.circular(25)),
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            child: TextButton(
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('add exercise'),
-                  Icon(Icons.add),
-                ],
-              ),
-              onPressed: () {},
-            ),
-          )
+              width: MediaQuery.of(context).size.width * 0.7,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 3),
+                  borderRadius: BorderRadius.circular(25)),
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: TextButton(
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(HelperText.addExercise),
+                      Icon(Icons.add),
+                    ],
+                  ),
+                  onPressed: () {
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: (context),
+                        builder: (context) {
+                          return SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.9,
+                              child: ExercisePicker());
+                        });
+                  }))
         ],
       ),
     );
