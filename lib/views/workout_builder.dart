@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gym_bro/global/exercise_picker_provider.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
 import 'package:gym_bro/widgets/exercise_picker.dart';
 import 'package:gym_bro/widgets/exercise_tile.dart';
+import 'package:provider/provider.dart';
 
 import '../global/text.dart';
 
@@ -15,16 +17,7 @@ class WorkoutBuilder extends StatefulWidget {
 class _WorkoutBuilderState extends State<WorkoutBuilder> {
   TextEditingController workoutTitleController = TextEditingController();
 
-  List<ExerciseTile> exerciseList = [
-    ExerciseTile(
-        exerciseName: ExerciseNames.benchPress, reps: 10, weight: 15, sets: 3),
-    ExerciseTile(
-      exerciseName: ExerciseNames.pullUps,
-      reps: 20,
-      weight: 25,
-      sets: 4,
-    )
-  ];
+  List<ExerciseTile> exerciseList = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,9 +37,18 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                 hintStyle: TextStyle(fontSize: 16)),
             controller: workoutTitleController,
           ),
-          Column(
-            children: exerciseList,
-          ),
+          Consumer<ExercisePickerProvider>(
+              builder: (context, exercisePickerProvider, _) {
+            List<Map<String, dynamic>> exercisesFromProvider =
+                exercisePickerProvider.getExercises;
+            return Column(
+              children: exercisesFromProvider
+                  .map((exercise) => ExerciseTile(
+                        exercises: exercise,
+                      ))
+                  .toList(),
+            );
+          }),
           Container(
               width: MediaQuery.of(context).size.width * 0.7,
               decoration: BoxDecoration(
@@ -70,8 +72,14 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                         builder: (context) {
                           return SizedBox(
                               height: MediaQuery.of(context).size.height * 0.9,
-                              child: ExercisePicker());
-                        });
+                              child: const ExercisePicker());
+                        }).then((value) {
+                      // Map<String, dynamic> exercise =
+                      //     Provider.of<ExercisePickerProvider>(context,
+                      //             listen: false)
+                      //         .getExercise;
+                      // ;
+                    });
                   }))
         ],
       ),

@@ -3,16 +3,16 @@ import 'package:gym_bro/global/locale_provider.dart';
 import 'package:provider/provider.dart';
 
 class ExerciseTile extends StatelessWidget {
-  String exerciseName;
-  int reps;
-  double weight;
-  int sets;
-  ExerciseTile(
-      {super.key,
-      required this.exerciseName,
-      required this.reps,
-      required this.sets,
-      this.weight = 0});
+  // String exerciseName;
+  // dynamic reps;
+  // dynamic weight;
+  // int sets;
+
+  Map<String, dynamic> exercises;
+  ExerciseTile({
+    super.key,
+    required this.exercises,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +21,27 @@ class ExerciseTile extends StatelessWidget {
             ? ' kg'
             : ' lbs';
 
+    List<Set<int>> reps = exercises['reps'];
+    List<int> repsList = reps.expand((rep) => rep).toList();
+    List<Set<double>> weights = exercises['weight'];
+    List<double> weightsList = weights.expand((weight) => weight).toList();
+
+    // print(setsList);
+    // List<int> reps = exercises['reps'].toList();
+
     return Container(
         child: Column(
       children: [
-        Text(exerciseName),
+        Text(exercises['exercise']),
         Container(
           height: 100,
           child: ListView.builder(
-              itemCount: sets,
-              itemBuilder: (context, idex) {
+              itemCount: exercises['sets'],
+              itemBuilder: (context, index) {
                 return Row(
                   children: [
-                    Text(reps.toString()),
-                    Text(weight.toString() + measureUnit)
+                    Text(repsList[index].toString()),
+                    Text('${weightsList[index].toString()} $measureUnit')
                   ],
                 );
               }),

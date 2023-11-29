@@ -193,11 +193,16 @@ class _ExercisePickerState extends State<ExercisePicker> {
           IconButton(
             icon: const Icon(Icons.coffee_rounded),
             onPressed: () {
-              Provider.of(context)<ExercisePickerProvider>().setExercise({
+              Provider.of<ExercisePickerProvider>(context, listen: false)
+                  .setExercise({
                 'muscleGroup': muscleGroupController.text,
                 'exercise': exerciseController.text,
-                'reps': repsControllers,
+                'reps':
+                    repsControllers.map((e) => {int.parse(e.text)}).toList(),
                 'weight': weightControllers
+                    .map((e) => {double.parse(e.text)})
+                    .toList(),
+                'sets': setsCount
               });
               Navigator.pop(context);
             },
