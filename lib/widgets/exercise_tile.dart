@@ -26,27 +26,72 @@ class ExerciseTile extends StatelessWidget {
     List<Set<double>> weights = exercises['weight'];
     List<double> weightsList = weights.expand((weight) => weight).toList();
 
-    // print(setsList);
-    // List<int> reps = exercises['reps'].toList();
+    Size deviceSize = MediaQuery.of(context).size;
 
-    return Container(
+    return SizedBox(
+        height: 150,
         child: Column(
-      children: [
-        Text(exercises['exercise']),
-        Container(
-          height: 100,
-          child: ListView.builder(
-              itemCount: exercises['sets'],
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    Text(repsList[index].toString()),
-                    Text('${weightsList[index].toString()} $measureUnit')
-                  ],
-                );
-              }),
-        ),
-      ],
-    ));
+          children: [
+            Container(
+                alignment: Alignment.center,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                width: deviceSize.width,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.transparent.withOpacity(0.2),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Text(exercises['exercise'])),
+            Container(
+              alignment: Alignment.center,
+              height: 100,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: exercises['sets'],
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: 100,
+                      margin:
+                          const EdgeInsets.only(left: 10, bottom: 5, top: 5),
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.transparent.withOpacity(0.2),
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
+                              child: Text(repsList[index].toString())),
+                          Container(
+                            height: 5,
+                            width: 5,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                border:
+                                    Border.all(color: Colors.black, width: 1),
+                                borderRadius: BorderRadius.circular(25)),
+                          ),
+                          Container(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Text(
+                                '${weightsList[index].toString()}$measureUnit',
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                              )),
+                        ],
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        ));
   }
 }

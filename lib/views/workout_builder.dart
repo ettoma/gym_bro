@@ -18,8 +18,11 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
   TextEditingController workoutTitleController = TextEditingController();
 
   List<ExerciseTile> exerciseList = [];
+
   @override
   Widget build(BuildContext context) {
+    Size deviceSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: NavBar(
         pageTitle: PageNames.workoutBuilder,
@@ -27,12 +30,15 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
       body: Column(
         children: [
           TextField(
+            autofocus: workoutTitleController.text.isEmpty ? true : false,
             style: Theme.of(context)
                 .textTheme
                 .headlineMedium!
-                .copyWith(fontSize: 20),
+                .copyWith(fontSize: 30, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
             decoration: const InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(25),
                 hintText: HelperText.workoutTitle,
                 hintStyle: TextStyle(fontSize: 16)),
             controller: workoutTitleController,
@@ -41,48 +47,35 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
               builder: (context, exercisePickerProvider, _) {
             List<Map<String, dynamic>> exercisesFromProvider =
                 exercisePickerProvider.getExercises;
-            return Column(
-              children: exercisesFromProvider
-                  .map((exercise) => ExerciseTile(
-                        exercises: exercise,
-                      ))
-                  .toList(),
+            return Expanded(
+              child: ListView.builder(
+                clipBehavior: Clip.antiAlias,
+                itemCount: exercisesFromProvider.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: ExerciseTile(
+                      exercises: exercisesFromProvider[index],
+                    ),
+                  );
+                },
+              ),
             );
           }),
-          Container(
-              width: MediaQuery.of(context).size.width * 0.7,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 3),
-                  borderRadius: BorderRadius.circular(25)),
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: TextButton(
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(HelperText.addExercise),
-                      Icon(Icons.add),
-                    ],
-                  ),
-                  onPressed: () {
-                    showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: (context),
-                        builder: (context) {
-                          return SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.9,
-                              child: const ExercisePicker());
-                        }).then((value) {
-                      // Map<String, dynamic> exercise =
-                      //     Provider.of<ExercisePickerProvider>(context,
-                      //             listen: false)
-                      //         .getExercise;
-                      // ;
-                    });
-                  }))
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () {
+            showModalBottomSheet(
+                isScrollControlled: true,
+                context: (context),
+                builder: (context) {
+                  return SizedBox(
+                      height: deviceSize.height * 0.9,
+                      child: const ExercisePicker());
+                });
+          }),
     );
   }
 }
