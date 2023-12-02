@@ -12,6 +12,8 @@ class ThemeProvider extends ChangeNotifier {
     textTheme: textThemeBase,
     textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
+            foregroundColor: MaterialStateColor.resolveWith(
+                (states) => ColorPalette.lightText),
             textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
                 color: ColorPalette.lightText,
                 fontSize: 20,
@@ -36,6 +38,8 @@ class ThemeProvider extends ChangeNotifier {
     textTheme: textThemeBase,
     textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
+            foregroundColor: MaterialStateColor.resolveWith(
+                (states) => ColorPalette.darkText),
             textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
                 color: ColorPalette.darkText,
                 fontSize: 20,
@@ -49,4 +53,6 @@ class ThemeProvider extends ChangeNotifier {
   );
 }
 
-TextTheme textThemeBase = TextTheme(headlineMedium: TextStyle(fontSize: 40));
+TextTheme textThemeBase = const TextTheme(
+  headlineMedium: TextStyle(fontSize: 40),
+);

@@ -17,6 +17,8 @@ class _ExercisePickerState extends State<ExercisePicker> {
   List<TextEditingController> repsControllers = [TextEditingController()];
   List<TextEditingController> weightControllers = [TextEditingController()];
 
+  FocusNode focusReps = FocusNode();
+
   int setsCount = 1;
 
   @override
@@ -56,156 +58,158 @@ class _ExercisePickerState extends State<ExercisePicker> {
 
     return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Text(Titles.exercisePickerTitle),
-          Padding(
+          Container(
             padding: const EdgeInsets.all(8.0),
-            child: DropdownMenu(
-                controller: muscleGroupController,
-                inputDecorationTheme: const InputDecorationTheme(
-                  border: InputBorder.none,
-                  filled: true,
-                ),
-                menuStyle: MenuStyle(
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                        const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 20))),
-                label: const Text(DropdownTitles.muscleGroup),
-                onSelected: (value) {
-                  setState(() {
-                    exerciseController.clear();
-                    repsControllers[0].clear();
-                    weightControllers[0].clear();
-                    muscleGroupController.text = value.toString();
-                  });
-                },
-                width: MediaQuery.of(context).size.width * 0.95,
-                dropdownMenuEntries:
-                    muscleGroups.map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry(
-                    label: value,
-                    value: value,
-                  );
-                }).toList()),
-          ),
-          Opacity(
-            opacity: muscleGroupController.text == '' ? 0 : 1,
-            child: Container(
-              height: 25,
-              width: 1,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      strokeAlign: BorderSide.strokeAlignCenter,
-                      color: MediaQuery.of(context).platformBrightness ==
-                              Brightness.dark
-                          ? Colors.white
-                          : Colors.black,
-                      width: 2)),
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            child: const Text(
+              Titles.exercisePickerTitle,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
-          Opacity(
-            opacity: muscleGroupController.text == '' ? 0 : 1,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: muscleGroupController.text == ''
-                  ? null
-                  : DropdownMenu(
-                      controller: exerciseController,
-                      inputDecorationTheme: const InputDecorationTheme(
-                        border: InputBorder.none,
-                        filled: true,
-                      ),
-                      menuStyle: MenuStyle(
-                          padding: MaterialStateProperty.all<EdgeInsets>(
-                              const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 20))),
-                      label: const Text(DropdownTitles.exercise),
-                      onSelected: (value) {
-                        setState(() {
-                          weightControllers[0].clear();
-                          repsControllers[0].clear();
-                          exerciseController.text = value.toString();
-                        });
+          Expanded(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownMenu(
+                    controller: muscleGroupController,
+                    inputDecorationTheme: const InputDecorationTheme(
+                      border: InputBorder.none,
+                    ),
+                    menuStyle: MenuStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10))),
+                    label: const Text(DropdownTitles.muscleGroup),
+                    onSelected: (value) {
+                      setState(() {
+                        exerciseController.clear();
+                        repsControllers[0].clear();
+                        weightControllers[0].clear();
+                        muscleGroupController.text = value.toString();
+                      });
+                    },
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    dropdownMenuEntries: muscleGroups
+                        .map<DropdownMenuEntry<String>>((String value) {
+                      return DropdownMenuEntry(
+                        label: value,
+                        value: value,
+                      );
+                    }).toList()),
+              ),
+              Opacity(
+                opacity: muscleGroupController.text == '' ? 0 : 1,
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.all(8.0),
+                  child: muscleGroupController.text == ''
+                      ? null
+                      : DropdownMenu(
+                          controller: exerciseController,
+                          inputDecorationTheme: const InputDecorationTheme(
+                            border: InputBorder.none,
+                          ),
+                          menuStyle: MenuStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 20))),
+                          label: const Text(DropdownTitles.exercise),
+                          onSelected: (value) {
+                            setState(() {
+                              weightControllers[0].clear();
+                              repsControllers[0].clear();
+                              exerciseController.text = value.toString();
+                            });
+                          },
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          dropdownMenuEntries: getExercisesForMuscleGroup()),
+                ),
+              ),
+              Opacity(
+                  opacity: exerciseController.text == '' ? 0 : 1,
+                  child: SizedBox(
+                    height: 400,
+                    child: ListView.builder(
+                      itemCount: setsCount,
+                      itemBuilder: (context, index) {
+                        return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                width: 100,
+                                child: TextField(
+                                  maxLines: 1,
+                                  maxLength: 3,
+                                  enableSuggestions: false,
+                                  controller: repsControllers[index],
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    counterText: '',
+                                    helperText: DropdownTitles.reps,
+                                    suffixIcon: Icon(Icons.onetwothree_rounded),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                width: 100,
+                                child: TextField(
+                                  maxLines: 1,
+                                  maxLength: 3,
+                                  enableSuggestions: false,
+                                  controller: weightControllers[index],
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    counterText: '',
+                                    helperText: DropdownTitles.weight,
+                                    suffixIcon: Icon(Icons.onetwothree_rounded),
+                                  ),
+                                ),
+                              ),
+                              weightControllers.length - 1 == index
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          repsControllers
+                                              .add(TextEditingController());
+                                          weightControllers
+                                              .add(TextEditingController());
+                                          setsCount++;
+                                        });
+                                      },
+                                      icon: const Icon(Icons.add))
+                                  : Container()
+                            ]);
                       },
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      dropdownMenuEntries: getExercisesForMuscleGroup()),
-            ),
-          ),
-          Opacity(
-              opacity: exerciseController.text == '' ? 0 : 1,
-              child: SizedBox(
-                height: 400,
-                child: ListView.builder(
-                  itemCount: setsCount,
-                  itemBuilder: (context, index) {
-                    return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            width: 100,
-                            child: TextField(
-                              maxLines: 1,
-                              maxLength: 3,
-                              enableSuggestions: false,
-                              controller: repsControllers[index],
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                counterText: '',
-                                helperText: DropdownTitles.reps,
-                                suffixIcon: Icon(Icons.onetwothree_rounded),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            width: 100,
-                            child: TextField(
-                              maxLines: 1,
-                              maxLength: 3,
-                              enableSuggestions: false,
-                              controller: weightControllers[index],
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                counterText: '',
-                                helperText: DropdownTitles.weight,
-                                suffixIcon: Icon(Icons.onetwothree_rounded),
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  repsControllers.add(TextEditingController());
-                                  weightControllers
-                                      .add(TextEditingController());
-                                  setsCount++;
-                                });
-                              },
-                              icon: const Icon(Icons.add))
-                        ]);
-                  },
-                ),
-              )),
-          IconButton(
-            icon: const Icon(Icons.coffee_rounded),
-            onPressed: () {
-              Provider.of<ExercisePickerProvider>(context, listen: false)
-                  .setExercise({
-                'muscleGroup': muscleGroupController.text,
-                'exercise': exerciseController.text,
-                'reps':
-                    repsControllers.map((e) => {int.parse(e.text)}).toList(),
-                'weight': weightControllers
-                    .map((e) => {double.parse(e.text)})
-                    .toList(),
-                'sets': setsCount
-              });
-              Navigator.pop(context);
-            },
+                    ),
+                  )),
+              IconButton(
+                icon: const Icon(Icons.coffee_rounded),
+                onPressed: () {
+                  Provider.of<ExercisePickerProvider>(context, listen: false)
+                      .setExercise({
+                    'muscleGroup': muscleGroupController.text,
+                    'exercise': exerciseController.text,
+                    'reps': repsControllers
+                        .map((e) => {int.parse(e.text)})
+                        .toList(),
+                    'weight': weightControllers
+                        .map((e) => {double.parse(e.text)})
+                        .toList(),
+                    'sets': setsCount
+                  });
+                  Navigator.pop(context);
+                },
+              )
+            ]),
           )
         ]);
   }

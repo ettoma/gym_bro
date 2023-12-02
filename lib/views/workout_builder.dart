@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:gym_bro/global/exercise_picker_provider.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
@@ -5,6 +7,7 @@ import 'package:gym_bro/widgets/exercise_picker.dart';
 import 'package:gym_bro/widgets/exercise_tile.dart';
 import 'package:provider/provider.dart';
 
+import '../global/colours.dart';
 import '../global/text.dart';
 
 class WorkoutBuilder extends StatefulWidget {
@@ -22,6 +25,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
+    Brightness brigthness = MediaQuery.of(context).platformBrightness;
 
     return Scaffold(
       appBar: NavBar(
@@ -62,10 +66,32 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
               ),
             );
           }),
+          SizedBox(
+            height: 80,
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                    sigmaX: 10, sigmaY: 10, tileMode: TileMode.clamp),
+                child: Container(
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
+          backgroundColor: brigthness == Brightness.dark
+              ? ColorPalette.darkBox
+              : ColorPalette.lightBox,
+          foregroundColor: brigthness == Brightness.dark
+              ? ColorPalette.lightText
+              : ColorPalette.darkText,
+          elevation: 1,
+          child: Icon(Icons.add,
+              color: brigthness == Brightness.dark
+                  ? ColorPalette.darkText
+                  : ColorPalette.lightText),
           onPressed: () {
             showModalBottomSheet(
                 isScrollControlled: true,

@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gym_bro/global/locale_provider.dart';
 import 'package:provider/provider.dart';
 
-class ExerciseTile extends StatelessWidget {
-  // String exerciseName;
-  // dynamic reps;
-  // dynamic weight;
-  // int sets;
+import '../global/colours.dart';
 
+class ExerciseTile extends StatelessWidget {
   Map<String, dynamic> exercises;
   ExerciseTile({
     super.key,
@@ -27,9 +24,10 @@ class ExerciseTile extends StatelessWidget {
     List<double> weightsList = weights.expand((weight) => weight).toList();
 
     Size deviceSize = MediaQuery.of(context).size;
+    Brightness brigthness = MediaQuery.of(context).platformBrightness;
 
     return SizedBox(
-        height: 150,
+        height: 175,
         child: Column(
           children: [
             Container(
@@ -39,12 +37,26 @@ class ExerciseTile extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
                 width: deviceSize.width,
                 decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: brigthness == Brightness.dark
+                              ? ColorPalette.darkBox
+                              : ColorPalette.lightBox,
+                          offset: Offset(3, 5))
+                    ],
+                    color: brigthness == Brightness.dark
+                        ? ColorPalette.darkBG
+                        : ColorPalette.lightBG,
                     border: Border.all(
-                      color: Colors.transparent.withOpacity(0.2),
-                      width: 2,
+                      color: brigthness == Brightness.dark
+                          ? ColorPalette.darkBox
+                          : ColorPalette.lightBox,
+                      width: 3,
                     ),
                     borderRadius: BorderRadius.circular(10)),
-                child: Text(exercises['exercise'])),
+                child: Text(exercises['exercise'],
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 18))),
             Container(
               alignment: Alignment.center,
               height: 100,
@@ -54,12 +66,13 @@ class ExerciseTile extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Container(
                       width: 100,
-                      margin:
-                          const EdgeInsets.only(left: 10, bottom: 5, top: 5),
+                      margin: const EdgeInsets.only(left: 10, top: 10),
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           border: Border.all(
-                            color: Colors.transparent.withOpacity(0.2),
+                            color: brigthness == Brightness.dark
+                                ? ColorPalette.darkBox
+                                : ColorPalette.lightBox,
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(10)),
@@ -69,20 +82,30 @@ class ExerciseTile extends StatelessWidget {
                           Container(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 5, horizontal: 10),
-                              child: Text(repsList[index].toString())),
+                              child: Text(repsList[index].toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16))),
                           Container(
                             height: 5,
                             width: 5,
                             decoration: BoxDecoration(
-                                color: Colors.black,
-                                border:
-                                    Border.all(color: Colors.black, width: 1),
+                                color: brigthness == Brightness.dark
+                                    ? ColorPalette.darkText
+                                    : ColorPalette.lightText,
+                                border: Border.all(
+                                    color: brigthness == Brightness.dark
+                                        ? ColorPalette.darkText
+                                        : ColorPalette.lightText,
+                                    width: 1),
                                 borderRadius: BorderRadius.circular(25)),
                           ),
                           Container(
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: Text(
                                 '${weightsList[index].toString()}$measureUnit',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500, fontSize: 16),
                                 overflow: TextOverflow.fade,
                                 softWrap: false,
                               )),
