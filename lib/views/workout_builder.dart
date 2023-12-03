@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:gym_bro/global/exercise_picker_provider.dart';
+import 'package:gym_bro/global/quick_workout_exercise_picker_provider.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
 import 'package:gym_bro/widgets/exercise_picker.dart';
 import 'package:gym_bro/widgets/exercise_tile.dart';
@@ -49,7 +50,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
           ),
           Consumer<ExercisePickerProvider>(
               builder: (context, exercisePickerProvider, _) {
-            List<Map<String, dynamic>> exercisesFromProvider =
+            List<Exercise> exercisesFromProvider =
                 exercisePickerProvider.getExercises;
             return Expanded(
               child: ListView.builder(
@@ -59,7 +60,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                   return Container(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: ExerciseTile(
-                      exercises: exercisesFromProvider[index],
+                      exercise: exercisesFromProvider[index],
                     ),
                   );
                 },

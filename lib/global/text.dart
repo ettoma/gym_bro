@@ -2,14 +2,14 @@ class PageNames {
   static const String myWorkouts = 'my workouts';
   static const String logs = 'logs';
   static const String profile = 'profile';
-  static const String quickStart = 'quick start';
+  static const String quickWorkout = 'quick start';
   static const String workoutBuilder = 'workout builder';
 
   static const List<String> names = [
     myWorkouts,
     logs,
     profile,
-    quickStart,
+    quickWorkout,
     workoutBuilder
   ];
 }
@@ -26,6 +26,7 @@ class ExerciseNames {
 
 class Titles {
   static const String exercisePickerTitle = 'exercise picker';
+  static const String createWorkout = 'create a workout';
 }
 
 class DropdownTitles {

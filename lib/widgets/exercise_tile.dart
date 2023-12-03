@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gym_bro/global/locale_provider.dart';
+import 'package:gym_bro/global/quick_workout_exercise_picker_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../global/colours.dart';
 
 class ExerciseTile extends StatelessWidget {
-  Map<String, dynamic> exercises;
+  Exercise exercise;
   ExerciseTile({
     super.key,
-    required this.exercises,
+    required this.exercise,
   });
 
   @override
@@ -18,10 +19,7 @@ class ExerciseTile extends StatelessWidget {
             ? ' kg'
             : ' lbs';
 
-    List<Set<int>> reps = exercises['reps'];
-    List<int> repsList = reps.expand((rep) => rep).toList();
-    List<Set<double>> weights = exercises['weight'];
-    List<double> weightsList = weights.expand((weight) => weight).toList();
+    List<WorkoutSet> sets = exercise.sets;
 
     Size deviceSize = MediaQuery.of(context).size;
     Brightness brigthness = MediaQuery.of(context).platformBrightness;
@@ -42,7 +40,7 @@ class ExerciseTile extends StatelessWidget {
                           color: brigthness == Brightness.dark
                               ? ColorPalette.darkBox
                               : ColorPalette.lightBox,
-                          offset: Offset(3, 5))
+                          offset: const Offset(3, 5))
                     ],
                     color: brigthness == Brightness.dark
                         ? ColorPalette.darkBG
@@ -54,7 +52,7 @@ class ExerciseTile extends StatelessWidget {
                       width: 3,
                     ),
                     borderRadius: BorderRadius.circular(10)),
-                child: Text(exercises['exercise'],
+                child: Text(exercise.name,
                     style: const TextStyle(
                         fontWeight: FontWeight.w600, fontSize: 18))),
             Container(
@@ -62,7 +60,7 @@ class ExerciseTile extends StatelessWidget {
               height: 100,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: exercises['sets'],
+                  itemCount: exercise.sets.length,
                   itemBuilder: (context, index) {
                     return Container(
                       width: 100,
@@ -82,7 +80,7 @@ class ExerciseTile extends StatelessWidget {
                           Container(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 5, horizontal: 10),
-                              child: Text(repsList[index].toString(),
+                              child: Text(sets[index].reps.toString(),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16))),
@@ -103,7 +101,7 @@ class ExerciseTile extends StatelessWidget {
                           Container(
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: Text(
-                                '${weightsList[index].toString()}$measureUnit',
+                                '${sets[index].weight.toString()}$measureUnit',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 16),
                                 overflow: TextOverflow.fade,

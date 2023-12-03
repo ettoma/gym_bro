@@ -12,10 +12,9 @@ class ThemeProvider extends ChangeNotifier {
     textTheme: textThemeBase,
     textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-            foregroundColor: MaterialStateColor.resolveWith(
-                (states) => ColorPalette.lightText),
+            foregroundColor:
+                MaterialStateColor.resolveWith((states) => Colors.black),
             textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
-                color: ColorPalette.lightText,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 fontFamily: GoogleFonts.notoSansMono().fontFamily)))),
@@ -41,7 +40,7 @@ class ThemeProvider extends ChangeNotifier {
             foregroundColor: MaterialStateColor.resolveWith(
                 (states) => ColorPalette.darkText),
             textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
-                color: ColorPalette.darkText,
+                // color: ColorPalette.darkText,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 fontFamily: GoogleFonts.notoSansMono().fontFamily)))),

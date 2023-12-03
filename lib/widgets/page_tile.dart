@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gym_bro/global/theme_provider.dart';
 import 'package:gym_bro/views/logs_view.dart';
 import 'package:gym_bro/views/my_workouts.dart';
 
 import '../global/text.dart';
 import '../views/profile_view.dart';
-import '../views/quick_start.dart';
+import '../views/quick_workout.dart';
 
 class PageTile extends StatelessWidget {
   final String pageTitle;
@@ -12,16 +13,23 @@ class PageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Container(
       height: 100,
       width: 100,
       margin: const EdgeInsets.all(10),
       child: TextButton(
-        style: Theme.of(context).textButtonTheme.style!.copyWith(
-            alignment: Alignment.centerRight,
-            foregroundColor: pageTitle == 'quick start'
-                ? MaterialStateColor.resolveWith((states) => Colors.red)
-                : Theme.of(context).textButtonTheme.style!.foregroundColor),
+        style: brightness == Brightness.dark
+            ? ThemeProvider()
+                .darkMode
+                .textButtonTheme
+                .style!
+                .copyWith(alignment: Alignment.centerRight)
+            : ThemeProvider()
+                .lightMode
+                .textButtonTheme
+                .style!
+                .copyWith(alignment: Alignment.centerRight),
         onPressed: () {
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => _switchPage(pageTitle)));
@@ -44,8 +52,8 @@ Widget _switchPage(String pageTitle) {
       return const LogsPage();
     case PageNames.profile:
       return const ProfilePage();
-    case PageNames.quickStart:
-      return const QuickStartPage();
+    case PageNames.quickWorkout:
+      return const QuickWorkout();
     default:
       return const MyWorkouts();
   }

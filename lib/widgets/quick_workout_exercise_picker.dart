@@ -5,20 +5,20 @@ import 'package:provider/provider.dart';
 import '../global/quick_workout_exercise_picker_provider.dart';
 import '../global/text.dart';
 
-class ExercisePicker extends StatefulWidget {
-  const ExercisePicker({super.key});
+class QuickWorkoutExercisePicker extends StatefulWidget {
+  const QuickWorkoutExercisePicker({super.key});
 
   @override
-  State<ExercisePicker> createState() => _ExercisePickerState();
+  State<QuickWorkoutExercisePicker> createState() =>
+      _QuickWorkoutExercisePickerState();
 }
 
-class _ExercisePickerState extends State<ExercisePicker> {
+class _QuickWorkoutExercisePickerState
+    extends State<QuickWorkoutExercisePicker> {
   TextEditingController muscleGroupController = TextEditingController();
   TextEditingController exerciseController = TextEditingController();
   List<TextEditingController> repsControllers = [TextEditingController()];
   List<TextEditingController> weightControllers = [TextEditingController()];
-
-  FocusNode focusReps = FocusNode();
 
   int setsCount = 1;
 
@@ -195,7 +195,8 @@ class _ExercisePickerState extends State<ExercisePicker> {
               IconButton(
                 icon: const Icon(Icons.coffee_rounded),
                 onPressed: () {
-                  Provider.of<ExercisePickerProvider>(context, listen: false)
+                  Provider.of<QuickWorkoutExercisePickerProvider>(context,
+                          listen: false)
                       .setExercise(Exercise(
                           name: exerciseController.text,
                           muscleGroup: muscleGroupController.text,

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
+import 'quick_workout_exercise_picker_provider.dart';
+
 class ExercisePickerProvider extends ChangeNotifier {
-  Map<String, dynamic> exercise = {};
+  List<Exercise> exercises = [];
 
-  List<Map<String, dynamic>> exercises = [];
-
-  void setExercise(exercise) {
-    this.exercise = exercise;
+  void setExercise(Exercise exercise) {
     exercises.add(exercise);
     notifyListeners();
   }
 
-  get getExercise => exercise;
+  void setIsDone(int exerciseIndex, int setIndex, bool value) {
+    exercises[exerciseIndex].sets[setIndex].isDone = value;
+    notifyListeners();
+  }
+
   get getExercises => exercises;
 }

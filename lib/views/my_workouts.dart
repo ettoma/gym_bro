@@ -22,10 +22,10 @@ class _MyWorkoutsState extends State<MyWorkouts> {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         child: TextButton(
-          child: Text('create a new workout'),
+          child: const Text(Titles.createWorkout),
           onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => WorkoutBuilder()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const WorkoutBuilder()));
           },
         ),
       ),
