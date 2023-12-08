@@ -27,6 +27,7 @@ class ExerciseNames {
 class Titles {
   static const String exercisePickerTitle = 'exercise picker';
   static const String createWorkout = 'create a workout';
+  static const String cancelQuickWorkout = 'you want to cancel this workout?';
 }
 
 class DropdownTitles {

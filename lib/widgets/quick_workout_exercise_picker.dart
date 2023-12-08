@@ -93,7 +93,7 @@ class _QuickWorkoutExercisePickerState
                         muscleGroupController.text = value.toString();
                       });
                     },
-                    width: MediaQuery.of(context).size.width * 0.95,
+                    width: MediaQuery.of(context).size.width * 0.75,
                     dropdownMenuEntries: muscleGroups
                         .map<DropdownMenuEntry<String>>((String value) {
                       return DropdownMenuEntry(
@@ -127,7 +127,7 @@ class _QuickWorkoutExercisePickerState
                               exerciseController.text = value.toString();
                             });
                           },
-                          width: MediaQuery.of(context).size.width * 0.95,
+                          width: MediaQuery.of(context).size.width * 0.75,
                           dropdownMenuEntries: getExercisesForMuscleGroup()),
                 ),
               ),
@@ -154,7 +154,8 @@ class _QuickWorkoutExercisePickerState
                                   decoration: const InputDecoration(
                                     counterText: '',
                                     helperText: DropdownTitles.reps,
-                                    suffixIcon: Icon(Icons.onetwothree_rounded),
+                                    suffixIcon: Icon(Icons.onetwothree_rounded,
+                                        color: Colors.tealAccent),
                                   ),
                                 ),
                               ),
@@ -171,7 +172,10 @@ class _QuickWorkoutExercisePickerState
                                   decoration: const InputDecoration(
                                     counterText: '',
                                     helperText: DropdownTitles.weight,
-                                    suffixIcon: Icon(Icons.onetwothree_rounded),
+                                    suffixIcon: Icon(
+                                      Icons.onetwothree_rounded,
+                                      color: Colors.tealAccent,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -193,7 +197,10 @@ class _QuickWorkoutExercisePickerState
                     ),
                   )),
               IconButton(
-                icon: const Icon(Icons.coffee_rounded),
+                icon: const Icon(
+                  Icons.check_rounded,
+                  color: Colors.tealAccent,
+                ),
                 onPressed: () {
                   Provider.of<QuickWorkoutExercisePickerProvider>(context,
                           listen: false)

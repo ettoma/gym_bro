@@ -28,6 +28,12 @@ class _QuickStartPageState extends State<QuickWorkout>
       interval: CustomTimerInterval.seconds);
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Brightness brigthness = MediaQuery.of(context).platformBrightness;
     Size deviceSize = MediaQuery.of(context).size;
@@ -35,10 +41,12 @@ class _QuickStartPageState extends State<QuickWorkout>
     return Scaffold(
       appBar: NavBar(
         pageTitle: PageNames.quickWorkout,
+        blockBackButton: true,
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Container(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            padding:
+                const EdgeInsets.only(top: 20, bottom: 10, left: 10, right: 10),
             alignment: Alignment.center,
             child: CustomTimer(
               controller: _controller,
@@ -48,28 +56,38 @@ class _QuickStartPageState extends State<QuickWorkout>
                         fontSize: 36.0, fontWeight: FontWeight.bold));
               },
             )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.play_arrow_rounded),
-              onPressed: () {
-                _controller.start();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.pause_rounded),
-              onPressed: () {
-                _controller.pause();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.stop_rounded),
-              onPressed: () {
-                _controller.reset();
-              },
-            ),
-          ],
+        Container(
+          width: deviceSize.width * 0.4,
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(width: 1, color: Colors.white12),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.play_arrow_rounded,
+                ),
+                onPressed: () {
+                  _controller.start();
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.pause_rounded),
+                onPressed: () {
+                  _controller.pause();
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.stop_rounded),
+                onPressed: () {
+                  _controller.reset();
+                },
+              ),
+            ],
+          ),
         ),
         Consumer<QuickWorkoutExercisePickerProvider>(
             builder: (context, exercisePickerProvider, _) {

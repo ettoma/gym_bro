@@ -19,7 +19,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NavBar(),
+      appBar: NavBar(
+        implyLeading: false,
+      ),
       body: Center(
         child: GridView.builder(
             itemCount: 4,
