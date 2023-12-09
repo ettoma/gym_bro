@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:gym_bro/database/database_utils.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
 
+import '../database/data_model.dart';
 import '../global/text.dart';
 import '../widgets/page_tile.dart';
 
@@ -22,6 +26,19 @@ class _HomeState extends State<Home> {
       appBar: NavBar(
         implyLeading: false,
       ),
+      floatingActionButton: FloatingActionButton(onPressed: () async {
+        DatabaseUtils().insertExercise(ExerciseModel(
+          id: Random().nextInt(10000000),
+          muscleGroup: 'chest',
+          exercise: 'bench press',
+          sets: [
+            WorkoutSet(reps: 10, weight: 20.0, isDone: false),
+            WorkoutSet(reps: 15, weight: 20.0, isDone: false),
+          ],
+        ));
+        var exercises = DatabaseUtils().getExercises();
+        print(exercises);
+      }),
       body: Center(
         child: GridView.builder(
             itemCount: 4,

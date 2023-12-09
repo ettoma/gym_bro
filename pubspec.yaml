@@ -38,6 +38,9 @@ dependencies:
   google_fonts: 
   provider: 
   custom_timer:
+  sqflite:
+  path:
+  path_provider:
 
 dev_dependencies:
   flutter_test:

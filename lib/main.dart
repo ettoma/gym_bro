@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:gym_bro/database/database_provider.dart';
 import 'package:gym_bro/global/locale_provider.dart';
 import 'package:gym_bro/global/navigator_observer.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
+import 'database/database_utils.dart';
 import 'global/exercise_picker_provider.dart';
 import 'global/quick_workout_exercise_picker_provider.dart';
 import 'global/theme_provider.dart';
 import 'views/home.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await DatabaseUtils().initialise();
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => ThemeProvider()),
     ChangeNotifierProvider(create: (context) => LocaleProvider()),
+    ChangeNotifierProvider(create: (context) => DatabaseProvider()),
     ChangeNotifierProvider(
       create: (context) => ExercisePickerProvider(),
     ),
