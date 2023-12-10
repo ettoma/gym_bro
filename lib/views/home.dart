@@ -27,17 +27,24 @@ class _HomeState extends State<Home> {
         implyLeading: false,
       ),
       floatingActionButton: FloatingActionButton(onPressed: () async {
-        DatabaseUtils().insertExercise(ExerciseModel(
+        DatabaseUtils().insertWorkout(WorkoutModel(
           id: Random().nextInt(10000000),
-          muscleGroup: 'chest',
-          exercise: 'bench press',
-          sets: [
-            WorkoutSet(reps: 10, weight: 20.0, isDone: false),
-            WorkoutSet(reps: 15, weight: 20.0, isDone: false),
+          name: 'push day',
+          exercises: [
+            ExerciseModel(
+              id: Random().nextInt(10000000),
+              muscleGroup: 'chest',
+              exercise: 'bench press',
+              sets: [
+                WorkoutSet(reps: 10, weight: 20.0, isDone: false),
+                WorkoutSet(reps: 15, weight: 20.0, isDone: false),
+              ],
+            )
           ],
+          isFavourite: false,
         ));
-        var exercises = DatabaseUtils().getExercises();
-        print(exercises);
+
+        DatabaseUtils().getAllWorkouts();
       }),
       body: Center(
         child: GridView.builder(

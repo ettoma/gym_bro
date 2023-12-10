@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'data_model.dart';
@@ -9,13 +11,24 @@ class DatabaseUtils {
   late Database database;
 
   Future<void> initialise() async {
-    //!! IMPORTANT !!
-    //!! for iOS , implement getLibraryDirectory()
+    Future<String> getPathToDB() async {
+      switch (defaultTargetPlatform) {
+        case TargetPlatform.android:
+          String path = await getDatabasesPath().then((path) => path);
+          return path;
+        case TargetPlatform.iOS:
+          String path = await getLibraryDirectory().then((dir) => dir.path);
+          return path;
+        default:
+          throw UnsupportedError('Unsupported platform');
+      }
+    }
+
     await openDatabase(
-      join(await getDatabasesPath(), 'workout_database7.db'),
+      join(await getPathToDB(), 'workout_database12.db'),
       onCreate: (db, version) async {
         return await db.execute(
-          'CREATE TABLE workout(id INTEGER PRIMARY KEY, exercise TEXT, muscleGroup TEXT, sets TEXT)',
+          'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN)',
         );
       },
       version: 1,
@@ -23,13 +36,14 @@ class DatabaseUtils {
       database = db;
     });
 
-    final List<Map<String, dynamic>> maps = await database
-        .rawQuery('SELECT name FROM sqlite_master WHERE name = ?', ['workout']);
+    // Check if the workout table exists
+    final List<Map<String, dynamic>> maps = await database.rawQuery(
+        'SELECT name FROM sqlite_master WHERE name = ?', ['workouts']);
 
     // Create the workout table if it doesn't exist
     if (maps.isEmpty) {
       await database.rawQuery(
-          'CREATE TABLE workout(id INTEGER PRIMARY KEY, exercise TEXT, muscleGroup TEXT, sets TEXT)');
+          'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN)');
     }
   }
 
@@ -48,11 +62,70 @@ class DatabaseUtils {
     ]);
   }
 
+  Future<void> insertWorkout(WorkoutModel workout) async {
+    await initialise();
+
+    List<String> exercisesList = [];
+
+    for (var e in workout.exercises) {
+      exercisesList.add(
+        '{"name":"${e.exercise}","muscleGroup":"${e.muscleGroup}","sets":${e.sets.map((set) => '{"reps":${set.reps},"weight":${set.weight},"isDone":${set.isDone}}').toList().toString()}}',
+      );
+    }
+
+    database.rawQuery('INSERT INTO workouts VALUES (?,?,?,?)', [
+      workout.id,
+      workout.name,
+      exercisesList.toString(),
+      'false',
+    ]);
+  }
+
+  Future<void> getAllWorkouts() async {
+    await initialise();
+    final List<Map<String, dynamic>> maps =
+        await database.rawQuery('SELECT * FROM workouts');
+
+    List<WorkoutModel> workoutList = [];
+    for (var w in maps) {
+      List<ExerciseModel> exercisesList = [];
+
+      jsonDecode(w['exercises']).forEach((exercise) {
+        exercisesList.add(ExerciseModel(
+            id: 0,
+            muscleGroup: exercise['muscleGroup'],
+            exercise: exercise['name'],
+            sets: exercise['sets']));
+      });
+      workoutList.add(
+        WorkoutModel(
+            id: w['id'],
+            name: w['workoutName'],
+            exercises: exercisesList,
+            isFavourite: w['isFavourite']),
+      );
+    }
+
+    print(workoutList);
+
+    /*
+    {id: 472026, 
+    workoutName: push day, 
+    exercises: [{"name":"bench press","muscleGroup":"chest","sets":[{"reps":10,"weight":20.0,"isDone":false}, 
+        {"reps":15,"weight":20.0,"isDone":false}]}], 
+    isFavourite: false}
+    */
+  }
+
+  Future<void> getWorkoutFromName(String workoutName) async {}
+
+  Future<void> getFavouriteWorkouts() async {}
+
   Future<void> getExercises() async {
     await initialise();
     final List<Map<String, dynamic>> maps = await database.query('workout');
 
-    final List<ExerciseModel> exercises = maps.map((map) {
+    maps.map((map) {
       List<WorkoutSet> sets = [];
 
       jsonDecode(map['sets']).forEach((set) {
@@ -73,6 +146,4 @@ class DatabaseUtils {
       return exercise;
     }).toList();
   }
-
-  DatabaseUtils();
 }

@@ -1,3 +1,30 @@
+/*
+      name workout | id | exercises | isFavourite
+                           ----> exercise: name, muscleGroup, sets
+                                                              ----> reps | weight | isDone
+
+      {
+        "id": 1,
+        "workoutName": "push day",
+        "exercises": [
+          {
+            "name": "chest press",
+            "muscleGroup": "chest",
+            "sets": [
+              {
+                "reps": 10,
+                "weight": 20.0,
+                "isDone": false
+              }
+            ]
+          }
+        ]
+        "isFavourite": true
+      }
+
+      
+    */
+
 class ExerciseModel {
   int id;
   String muscleGroup;
@@ -5,7 +32,7 @@ class ExerciseModel {
   List<WorkoutSet> sets;
 
   ExerciseModel(
-      {required this.id,
+      {this.id = 0,
       required this.muscleGroup,
       required this.exercise,
       required this.sets});
@@ -18,21 +45,47 @@ class ExerciseModel {
       'sets': sets.map((set) => set.toMap()).toList(),
     };
   }
+
+  factory ExerciseModel.fromMap(Map<String, dynamic> map) {
+    return ExerciseModel(
+      id: map['id'],
+      muscleGroup: map['muscleGroup'],
+      exercise: map['exercise'],
+      sets:
+          List<WorkoutSet>.from(map['sets']?.map((x) => WorkoutSet.fromMap(x))),
+    );
+  }
 }
 
 class WorkoutModel {
   int id;
   String name;
   List<ExerciseModel> exercises;
+  bool isFavourite;
 
-  WorkoutModel({required this.id, required this.name, required this.exercises});
+  WorkoutModel(
+      {required this.id,
+      required this.name,
+      required this.exercises,
+      required this.isFavourite});
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
       'exercises': exercises.map((exercise) => exercise.toMap()).toList(),
+      'isFavourite': isFavourite,
     };
+  }
+
+  factory WorkoutModel.fromMap(Map<String, dynamic> map) {
+    return WorkoutModel(
+      id: map['id'],
+      name: map['workoutName'],
+      exercises: List<ExerciseModel>.from(
+          map['exercises']?.map((x) => ExerciseModel.fromMap(x))),
+      isFavourite: map['isFavourite'],
+    );
   }
 }
 
@@ -49,5 +102,13 @@ class WorkoutSet {
       'weight': weight,
       'isDone': isDone,
     };
+  }
+
+  factory WorkoutSet.fromMap(Map<String, dynamic> map) {
+    return WorkoutSet(
+      reps: map['reps'],
+      weight: map['weight'],
+      isDone: map['isDone'],
+    );
   }
 }
