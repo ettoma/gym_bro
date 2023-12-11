@@ -39,12 +39,19 @@ class _HomeState extends State<Home> {
                 WorkoutSet(reps: 10, weight: 20.0, isDone: false),
                 WorkoutSet(reps: 15, weight: 20.0, isDone: false),
               ],
+            ),
+            ExerciseModel(
+              id: Random().nextInt(10000000),
+              muscleGroup: 'back',
+              exercise: 'lat pulldown',
+              sets: [
+                WorkoutSet(reps: 10, weight: 20.0, isDone: false),
+                WorkoutSet(reps: 15, weight: 20.0, isDone: false),
+              ],
             )
           ],
           isFavourite: false,
         ));
-
-        DatabaseUtils().getAllWorkouts();
       }),
       body: Center(
         child: GridView.builder(

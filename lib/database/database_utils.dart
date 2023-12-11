@@ -19,6 +19,9 @@ class DatabaseUtils {
         case TargetPlatform.iOS:
           String path = await getLibraryDirectory().then((dir) => dir.path);
           return path;
+        case TargetPlatform.macOS:
+          String path = await getLibraryDirectory().then((dir) => dir.path);
+          return path;
         default:
           throw UnsupportedError('Unsupported platform');
       }
@@ -81,7 +84,7 @@ class DatabaseUtils {
     ]);
   }
 
-  Future<void> getAllWorkouts() async {
+  Future<List<WorkoutModel>> getAllWorkouts() async {
     await initialise();
     final List<Map<String, dynamic>> maps =
         await database.rawQuery('SELECT * FROM workouts');
@@ -91,22 +94,28 @@ class DatabaseUtils {
       List<ExerciseModel> exercisesList = [];
 
       jsonDecode(w['exercises']).forEach((exercise) {
+        List<WorkoutSet> setsList = [];
+        exercise['sets'].forEach((set) {
+          setsList.add(WorkoutSet(
+              reps: set['reps'], weight: set['weight'], isDone: set['isDone']));
+        });
+
         exercisesList.add(ExerciseModel(
-            id: 0,
-            muscleGroup: exercise['muscleGroup'],
-            exercise: exercise['name'],
-            sets: exercise['sets']));
+          id: 0,
+          muscleGroup: exercise['muscleGroup'],
+          exercise: exercise['name'],
+          sets: setsList,
+        ));
       });
       workoutList.add(
         WorkoutModel(
             id: w['id'],
             name: w['workoutName'],
             exercises: exercisesList,
-            isFavourite: w['isFavourite']),
+            isFavourite: bool.parse(w['isFavourite'])),
       );
     }
-
-    print(workoutList);
+    return workoutList;
 
     /*
     {id: 472026, 
