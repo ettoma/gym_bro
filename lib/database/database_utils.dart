@@ -155,4 +155,10 @@ class DatabaseUtils {
       return exercise;
     }).toList();
   }
+
+  Future<void> deleteAllWorkouts() async {
+    await initialise();
+
+    database.rawQuery('DELETE FROM workouts');
+  }
 }

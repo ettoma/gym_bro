@@ -5,6 +5,7 @@ import 'package:gym_bro/global/text.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
 import 'package:gym_bro/widgets/workout_tile.dart';
 
+import '../global/colours.dart';
 import 'workout_builder.dart';
 
 class MyWorkouts extends StatefulWidget {
@@ -21,6 +22,8 @@ class _MyWorkoutsState extends State<MyWorkouts> {
 
   @override
   Widget build(BuildContext context) {
+    Brightness brigthness = MediaQuery.of(context).platformBrightness;
+    Size deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: NavBar(
         pageTitle: PageNames.myWorkouts,
@@ -49,19 +52,24 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                   return const Center(child: CircularProgressIndicator());
                 }
               }),
-          Container(
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            child: TextButton(
-              child: const Text(Titles.createWorkout),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const WorkoutBuilder()));
-              },
-            ),
-          ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: brigthness == Brightness.dark
+              ? Colors.blueAccent
+              : ColorPalette.lightBox,
+          foregroundColor: brigthness == Brightness.dark
+              ? ColorPalette.lightText
+              : ColorPalette.darkText,
+          elevation: 1,
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const WorkoutBuilder()));
+          }),
     );
   }
 }

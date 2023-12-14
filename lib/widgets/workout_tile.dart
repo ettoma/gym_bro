@@ -11,6 +11,18 @@ class WorkoutTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
     Brightness brigthness = MediaQuery.of(context).platformBrightness;
+
+    Color getBorderColor() {
+      switch (brigthness) {
+        case Brightness.dark:
+          return ColorPalette.darkBox;
+        case Brightness.light:
+          return ColorPalette.lightBox;
+        default:
+          return ColorPalette.lightBox;
+      }
+    }
+
     return SizedBox(
       height: 175,
       child: Column(
@@ -23,13 +35,13 @@ class WorkoutTile extends StatelessWidget {
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.blueAccent, offset: const Offset(3, 5))
+                        color: getBorderColor(), offset: const Offset(3, 5))
                   ],
                   color: brigthness == Brightness.dark
                       ? ColorPalette.darkBG
                       : ColorPalette.lightBG,
                   border: Border.all(
-                    color: Colors.blueAccent,
+                    color: getBorderColor(),
                     width: 3,
                   ),
                   borderRadius: BorderRadius.circular(10)),
@@ -49,7 +61,7 @@ class WorkoutTile extends StatelessWidget {
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       border: Border.all(
-                        color: Colors.blueAccent,
+                        color: getBorderColor(),
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(10)),

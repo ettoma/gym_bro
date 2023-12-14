@@ -1,13 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:gym_bro/database/database_utils.dart';
 import 'package:gym_bro/global/exercise_picker_provider.dart';
-import 'package:gym_bro/global/quick_workout_exercise_picker_provider.dart';
+import 'package:gym_bro/global/quick_workout_exercise_picker_provider.dart'
+    as qwep;
 import 'package:gym_bro/widgets/app_bar.dart';
 import 'package:gym_bro/widgets/exercise_picker.dart';
 import 'package:gym_bro/widgets/exercise_tile.dart';
 import 'package:provider/provider.dart';
 
+import '../database/data_model.dart';
 import '../global/colours.dart';
 import '../global/text.dart';
 
@@ -50,7 +53,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
           ),
           Consumer<ExercisePickerProvider>(
               builder: (context, exercisePickerProvider, _) {
-            List<Exercise> exercisesFromProvider =
+            List<qwep.Exercise> exercisesFromProvider =
                 exercisePickerProvider.getExercises;
             return Expanded(
               child: ListView.builder(
@@ -67,6 +70,18 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
               ),
             );
           }),
+          Container(child: Consumer<ExercisePickerProvider>(
+            builder: (context, exercisePickerProvider, _) {
+              List<qwep.Exercise> exercisesFromProvider =
+                  exercisePickerProvider.getExercises;
+              return TextButton(
+                  child: Text('save workout'),
+                  onPressed: () async {
+                    saveWorkout(exercisesFromProvider,
+                        workoutTitleController.text, context);
+                  });
+            },
+          )),
           SizedBox(
             height: 80,
             child: ClipRect(
@@ -105,4 +120,29 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
           }),
     );
   }
+}
+
+Future<void> saveWorkout(List<qwep.Exercise> exercises, String workoutTitle,
+    BuildContext context) async {
+  int dbSize = await DatabaseUtils().getAllWorkouts().then((e) => e.length);
+
+  List<ExerciseModel> exerciseModels = [];
+
+  for (var exercise in exercises) {
+    exerciseModels.add(ExerciseModel(
+      exercise: exercise.name,
+      muscleGroup: exercise.muscleGroup,
+      sets: exercise.sets
+          .map((e) => WorkoutSet(isDone: false, reps: e.reps, weight: e.weight))
+          .toList(),
+    ));
+  }
+
+  DatabaseUtils().insertWorkout(WorkoutModel(
+      id: dbSize + 1,
+      name: workoutTitle,
+      exercises: exerciseModels,
+      isFavourite: false));
+
+  Navigator.pop(context);
 }
