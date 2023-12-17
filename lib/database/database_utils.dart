@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'data_model.dart';
+import 'database_provider.dart';
 
 class DatabaseUtils {
   late Database database;
@@ -47,6 +50,14 @@ class DatabaseUtils {
     if (maps.isEmpty) {
       await database.rawQuery(
           'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN)');
+    }
+  }
+
+  Future<void> initialiseProviderDatabase(context) async {
+    List<WorkoutModel> workouts = await getAllWorkouts();
+
+    for (var w in workouts) {
+      Provider.of<DatabaseProvider>(context, listen: false).addWorkoutToList(w);
     }
   }
 
@@ -115,6 +126,7 @@ class DatabaseUtils {
             isFavourite: bool.parse(w['isFavourite'])),
       );
     }
+
     return workoutList;
 
     /*

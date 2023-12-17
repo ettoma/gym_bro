@@ -93,7 +93,7 @@ class _ExercisePickerState extends State<ExercisePicker> {
                         muscleGroupController.text = value.toString();
                       });
                     },
-                    width: MediaQuery.of(context).size.width * 0.95,
+                    width: MediaQuery.of(context).size.width * 0.75,
                     dropdownMenuEntries: muscleGroups
                         .map<DropdownMenuEntry<String>>((String value) {
                       return DropdownMenuEntry(
@@ -127,7 +127,7 @@ class _ExercisePickerState extends State<ExercisePicker> {
                               exerciseController.text = value.toString();
                             });
                           },
-                          width: MediaQuery.of(context).size.width * 0.95,
+                          width: MediaQuery.of(context).size.width * 0.75,
                           dropdownMenuEntries: getExercisesForMuscleGroup()),
                 ),
               ),
@@ -154,7 +154,8 @@ class _ExercisePickerState extends State<ExercisePicker> {
                                   decoration: const InputDecoration(
                                     counterText: '',
                                     helperText: DropdownTitles.reps,
-                                    suffixIcon: Icon(Icons.onetwothree_rounded),
+                                    suffixIcon: Icon(Icons.onetwothree_rounded,
+                                        color: Colors.tealAccent),
                                   ),
                                 ),
                               ),
@@ -171,7 +172,10 @@ class _ExercisePickerState extends State<ExercisePicker> {
                                   decoration: const InputDecoration(
                                     counterText: '',
                                     helperText: DropdownTitles.weight,
-                                    suffixIcon: Icon(Icons.onetwothree_rounded),
+                                    suffixIcon: Icon(
+                                      Icons.onetwothree_rounded,
+                                      color: Colors.tealAccent,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -193,21 +197,45 @@ class _ExercisePickerState extends State<ExercisePicker> {
                     ),
                   )),
               IconButton(
-                icon: const Icon(Icons.coffee_rounded),
+                icon: const Icon(
+                  Icons.check_rounded,
+                  color: Colors.tealAccent,
+                ),
                 onPressed: () {
-                  Provider.of<ExercisePickerProvider>(context, listen: false)
-                      .setExercise(Exercise(
-                          name: exerciseController.text,
-                          muscleGroup: muscleGroupController.text,
-                          isExerciseDone: false,
-                          sets: [
-                        for (int i = 0; i < setsCount; i++)
-                          WorkoutSet(
-                              reps: int.parse(repsControllers[i].text),
-                              weight: double.parse(weightControllers[i].text),
-                              isDone: false)
-                      ]));
-                  Navigator.pop(context);
+                  if (exerciseController.text == '' ||
+                      muscleGroupController.text == '' ||
+                      repsControllers[0].text == '' ||
+                      weightControllers[0].text == '') {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const AlertDialog(
+                            title: Text('error',
+                                style: TextStyle(color: Colors.amberAccent)),
+                            content: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text(
+                                'please fill in all fields',
+                              ),
+                            ),
+                          );
+                        });
+                    return;
+                  } else {
+                    Provider.of<ExercisePickerProvider>(context, listen: false)
+                        .setExercise(Exercise(
+                            name: exerciseController.text,
+                            muscleGroup: muscleGroupController.text,
+                            isExerciseDone: false,
+                            sets: [
+                          for (int i = 0; i < setsCount; i++)
+                            WorkoutSet(
+                                reps: int.parse(repsControllers[i].text),
+                                weight: double.parse(weightControllers[i].text),
+                                isDone: false)
+                        ]));
+                    Navigator.pop(context);
+                  }
                 },
               )
             ]),

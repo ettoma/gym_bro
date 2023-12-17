@@ -11,6 +11,7 @@ import 'package:gym_bro/widgets/exercise_tile.dart';
 import 'package:provider/provider.dart';
 
 import '../database/data_model.dart';
+import '../database/database_provider.dart';
 import '../global/colours.dart';
 import '../global/text.dart';
 
@@ -24,12 +25,45 @@ class WorkoutBuilder extends StatefulWidget {
 class _WorkoutBuilderState extends State<WorkoutBuilder> {
   TextEditingController workoutTitleController = TextEditingController();
 
-  List<ExerciseTile> exerciseList = [];
-
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
     Brightness brigthness = MediaQuery.of(context).platformBrightness;
+
+    Future<void> saveWorkout(
+      List<qwep.Exercise> exercises,
+      String workoutTitle,
+    ) async {
+      int dbSize = await DatabaseUtils().getAllWorkouts().then((e) => e.length);
+
+      List<ExerciseModel> exerciseModels = [];
+
+      for (var exercise in exercises) {
+        exerciseModels.add(ExerciseModel(
+          exercise: exercise.name,
+          muscleGroup: exercise.muscleGroup,
+          sets: exercise.sets
+              .map((e) =>
+                  WorkoutSet(isDone: false, reps: e.reps, weight: e.weight))
+              .toList(),
+        ));
+      }
+
+      DatabaseUtils().insertWorkout(
+        WorkoutModel(
+            id: dbSize + 1,
+            name: workoutTitle,
+            exercises: exerciseModels,
+            isFavourite: false),
+      );
+      Provider.of<DatabaseProvider>(context, listen: false).addWorkoutToList(
+        WorkoutModel(
+            id: dbSize + 1,
+            name: workoutTitle,
+            exercises: exerciseModels,
+            isFavourite: false),
+      );
+    }
 
     return Scaffold(
       appBar: NavBar(
@@ -70,18 +104,45 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
               ),
             );
           }),
-          Container(child: Consumer<ExercisePickerProvider>(
+          Consumer<ExercisePickerProvider>(
             builder: (context, exercisePickerProvider, _) {
               List<qwep.Exercise> exercisesFromProvider =
                   exercisePickerProvider.getExercises;
+
               return TextButton(
-                  child: Text('save workout'),
-                  onPressed: () async {
-                    saveWorkout(exercisesFromProvider,
-                        workoutTitleController.text, context);
+                  child: const Text('save workout'),
+                  onPressed: () {
+                    if (workoutTitleController.text.isEmpty ||
+                        exercisesFromProvider.isEmpty) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            String getErrorMessage() {
+                              if (workoutTitleController.text.isEmpty) {
+                                return 'please enter a workout title';
+                              } else {
+                                return 'please add at least one exercise';
+                              }
+                            }
+
+                            return AlertDialog(
+                              title: const Text(
+                                'error',
+                                style: TextStyle(color: Colors.amberAccent),
+                              ),
+                              content: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Text(getErrorMessage())),
+                            );
+                          });
+                    } else {
+                      saveWorkout(
+                          exercisesFromProvider, workoutTitleController.text);
+                      Navigator.pop(context);
+                    }
                   });
             },
-          )),
+          ),
           SizedBox(
             height: 80,
             child: ClipRect(
@@ -120,29 +181,4 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
           }),
     );
   }
-}
-
-Future<void> saveWorkout(List<qwep.Exercise> exercises, String workoutTitle,
-    BuildContext context) async {
-  int dbSize = await DatabaseUtils().getAllWorkouts().then((e) => e.length);
-
-  List<ExerciseModel> exerciseModels = [];
-
-  for (var exercise in exercises) {
-    exerciseModels.add(ExerciseModel(
-      exercise: exercise.name,
-      muscleGroup: exercise.muscleGroup,
-      sets: exercise.sets
-          .map((e) => WorkoutSet(isDone: false, reps: e.reps, weight: e.weight))
-          .toList(),
-    ));
-  }
-
-  DatabaseUtils().insertWorkout(WorkoutModel(
-      id: dbSize + 1,
-      name: workoutTitle,
-      exercises: exerciseModels,
-      isFavourite: false));
-
-  Navigator.pop(context);
 }

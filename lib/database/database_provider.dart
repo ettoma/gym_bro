@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:gym_bro/database/data_model.dart';
 
 class DatabaseProvider extends ChangeNotifier {
-  late Database database;
+  List<WorkoutModel> workoutList = [];
 
-  void setDatabase(database) {
-    this.database = database;
+  void addWorkoutToList(WorkoutModel workout) {
+    workoutList.add(workout);
+    notifyListeners();
+  }
+
+  void deleteAllWorkouts() {
+    workoutList.clear();
     notifyListeners();
   }
 }

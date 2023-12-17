@@ -34,6 +34,12 @@ class _QuickStartPageState extends State<QuickWorkout>
   }
 
   @override
+  void initState() {
+    super.initState();
+    _controller.start();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Brightness brigthness = MediaQuery.of(context).platformBrightness;
     Size deviceSize = MediaQuery.of(context).size;
@@ -81,11 +87,36 @@ class _QuickStartPageState extends State<QuickWorkout>
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.stop_rounded),
-                onPressed: () {
-                  _controller.reset();
-                },
-              ),
+                  icon: const Icon(Icons.stop_rounded),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text(Titles.cancelQuickWorkout),
+                          contentPadding: const EdgeInsets.all(20),
+                          titleTextStyle: const TextStyle(fontSize: 18),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text(
+                                  'No',
+                                  style: TextStyle(color: Colors.amberAccent),
+                                )),
+                            TextButton(
+                                onPressed: () {
+                                  _controller.reset();
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Yes')),
+                          ],
+                        );
+                      },
+                    );
+                  })
             ],
           ),
         ),
