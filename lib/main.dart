@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:gym_bro/database/database_provider.dart';
 import 'package:gym_bro/global/locale_provider.dart';
 import 'package:gym_bro/global/navigator_observer.dart';
@@ -12,6 +13,8 @@ import 'views/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  GoogleFonts.config.allowRuntimeFetching = true;
 
   await DatabaseUtils().initialise();
 

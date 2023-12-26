@@ -4,6 +4,7 @@ import 'package:gym_bro/database/database_provider.dart';
 import 'package:gym_bro/database/database_utils.dart';
 import 'package:gym_bro/global/text.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
+import 'package:gym_bro/widgets/workout_dialog.dart';
 import 'package:gym_bro/widgets/workout_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -25,26 +26,58 @@ class _MyWorkoutsState extends State<MyWorkouts> {
   @override
   Widget build(BuildContext context) {
     Brightness brigthness = MediaQuery.of(context).platformBrightness;
-    // Size deviceSize = MediaQuery.of(context).size;
+    Size deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: NavBar(
         pageTitle: PageNames.myWorkouts,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Consumer<DatabaseProvider>(
-            builder: (context, databaseProvider, _) {
-              return Expanded(
-                  child: ListView.builder(
-                      itemCount: databaseProvider.workoutList.length,
-                      itemBuilder: (context, index) {
-                        return WorkoutTile(
-                            workout: databaseProvider.workoutList[index]);
-                      }));
-            },
-          )
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Consumer<DatabaseProvider>(
+              builder: (context, databaseProvider, _) {
+                return Expanded(
+                    child: ListView.builder(
+                        itemCount: databaseProvider.workoutList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onLongPress: () {
+                              showDialog(
+                                  barrierDismissible: true,
+                                  context: context,
+                                  builder: (context) {
+                                    return WorkoutDialog(
+                                      deviceSize: deviceSize,
+                                      workout:
+                                          databaseProvider.workoutList[index],
+                                    );
+                                  });
+                            },
+                            child: Dismissible(
+                              key: UniqueKey(),
+                              dismissThresholds:
+                                  Map.from({DismissDirection.endToStart: 0.3}),
+                              direction: DismissDirection.endToStart,
+                              confirmDismiss: (direction) async {
+                                await DatabaseUtils().deleteWorkout(
+                                    databaseProvider.workoutList[index]);
+
+                                databaseProvider.deleteWorkout(
+                                    databaseProvider.workoutList[index]);
+                                return;
+                              },
+                              background: stackBehindDismiss(),
+                              child: WorkoutTile(
+                                  workout: databaseProvider.workoutList[index]),
+                            ),
+                          );
+                        }));
+              },
+            )
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
           backgroundColor: brigthness == Brightness.dark
@@ -64,4 +97,19 @@ class _MyWorkoutsState extends State<MyWorkouts> {
           }),
     );
   }
+}
+
+Widget stackBehindDismiss() {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.redAccent,
+    ),
+    alignment: Alignment.centerRight,
+    padding: const EdgeInsets.only(right: 20.0),
+    child: const Icon(
+      Icons.delete,
+      color: Colors.white,
+    ),
+  );
 }

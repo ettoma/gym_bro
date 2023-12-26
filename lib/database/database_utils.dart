@@ -25,6 +25,17 @@ class DatabaseUtils {
         case TargetPlatform.macOS:
           String path = await getLibraryDirectory().then((dir) => dir.path);
           return path;
+        case TargetPlatform.windows:
+          String path =
+              await getApplicationDocumentsDirectory().then((dir) => dir.path);
+          return path;
+        case TargetPlatform.fuchsia:
+          String path = await getLibraryDirectory().then((dir) => dir.path);
+          return path;
+        case TargetPlatform.linux:
+          String path = await getLibraryDirectory().then((dir) => dir.path);
+          return path;
+
         default:
           throw UnsupportedError('Unsupported platform');
       }
@@ -172,5 +183,10 @@ class DatabaseUtils {
     await initialise();
 
     database.rawQuery('DELETE FROM workouts');
+  }
+
+  Future<void> deleteWorkout(WorkoutModel workout) async {
+    await initialise();
+    database.rawQuery('DELETE FROM workouts WHERE id = ?', [workout.id]);
   }
 }

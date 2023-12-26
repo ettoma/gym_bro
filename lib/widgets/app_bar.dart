@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gym_bro/global/text.dart';
+import 'package:provider/provider.dart';
+
+import '../global/exercise_picker_provider.dart';
+import '../global/quick_workout_exercise_picker_provider.dart';
 
 class NavBar extends StatelessWidget implements PreferredSizeWidget {
   String pageTitle;
@@ -42,6 +46,17 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
                             )),
                         TextButton(
                             onPressed: () {
+                              if (pageTitle == 'workout builder') {
+                                Provider.of<ExercisePickerProvider>(context,
+                                        listen: false)
+                                    .emptyList();
+                              } else if (pageTitle == 'quick start') {
+                                Provider.of<QuickWorkoutExercisePickerProvider>(
+                                        context,
+                                        listen: false)
+                                    .emptyList();
+                              }
+
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },

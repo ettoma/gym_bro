@@ -62,6 +62,7 @@ class _ExercisePickerState extends State<ExercisePicker> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
+            color: Colors.red,
             padding: const EdgeInsets.all(8.0),
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: const Text(
@@ -69,176 +70,201 @@ class _ExercisePickerState extends State<ExercisePicker> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
-          Expanded(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownMenu(
-                    controller: muscleGroupController,
-                    inputDecorationTheme: const InputDecorationTheme(
-                      border: InputBorder.none,
-                    ),
-                    menuStyle: MenuStyle(
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                            const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10))),
-                    label: const Text(DropdownTitles.muscleGroup),
-                    onSelected: (value) {
-                      setState(() {
-                        exerciseController.clear();
-                        repsControllers[0].clear();
-                        weightControllers[0].clear();
-                        muscleGroupController.text = value.toString();
-                      });
-                    },
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    dropdownMenuEntries: muscleGroups
-                        .map<DropdownMenuEntry<String>>((String value) {
-                      return DropdownMenuEntry(
-                        label: value,
-                        value: value,
-                      );
-                    }).toList()),
-              ),
-              Opacity(
-                opacity: muscleGroupController.text == '' ? 0 : 1,
-                child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  padding: const EdgeInsets.all(8.0),
-                  child: muscleGroupController.text == ''
-                      ? null
-                      : DropdownMenu(
-                          controller: exerciseController,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                width: constraints.maxWidth,
+                height: 400,
+                // height: 200,
+                color: Colors.limeAccent,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      color: Colors.red,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 0, vertical: 5),
+                      padding: const EdgeInsets.all(8.0),
+                      child: DropdownMenu(
+                          width: 150,
+                          controller: muscleGroupController,
                           inputDecorationTheme: const InputDecorationTheme(
                             border: InputBorder.none,
                           ),
                           menuStyle: MenuStyle(
                               padding: MaterialStateProperty.all<EdgeInsets>(
                                   const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 20))),
-                          label: const Text(DropdownTitles.exercise),
+                                      horizontal: 20, vertical: 10))),
+                          label: const Text(DropdownTitles.muscleGroup),
                           onSelected: (value) {
                             setState(() {
-                              weightControllers[0].clear();
+                              exerciseController.clear();
                               repsControllers[0].clear();
-                              exerciseController.text = value.toString();
+                              weightControllers[0].clear();
+                              muscleGroupController.text = value.toString();
                             });
                           },
-                          width: MediaQuery.of(context).size.width * 0.75,
-                          dropdownMenuEntries: getExercisesForMuscleGroup()),
-                ),
-              ),
-              Opacity(
-                  opacity: exerciseController.text == '' ? 0 : 1,
-                  child: SizedBox(
-                    height: 400,
-                    child: ListView.builder(
-                      itemCount: setsCount,
-                      itemBuilder: (context, index) {
-                        return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                width: 100,
-                                child: TextField(
-                                  maxLines: 1,
-                                  maxLength: 3,
-                                  enableSuggestions: false,
-                                  controller: repsControllers[index],
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    counterText: '',
-                                    helperText: DropdownTitles.reps,
-                                    suffixIcon: Icon(Icons.onetwothree_rounded,
-                                        color: Colors.tealAccent),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                width: 100,
-                                child: TextField(
-                                  maxLines: 1,
-                                  maxLength: 3,
-                                  enableSuggestions: false,
-                                  controller: weightControllers[index],
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    counterText: '',
-                                    helperText: DropdownTitles.weight,
-                                    suffixIcon: Icon(
-                                      Icons.onetwothree_rounded,
-                                      color: Colors.tealAccent,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              weightControllers.length - 1 == index
-                                  ? IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          repsControllers
-                                              .add(TextEditingController());
-                                          weightControllers
-                                              .add(TextEditingController());
-                                          setsCount++;
-                                        });
-                                      },
-                                      icon: const Icon(Icons.add))
-                                  : Container()
-                            ]);
-                      },
+                          // width: MediaQuery.of(context).size.width * 0.75,
+                          dropdownMenuEntries: muscleGroups
+                              .map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry(
+                              label: value,
+                              value: value,
+                            );
+                          }).toList()),
                     ),
-                  )),
-              IconButton(
-                icon: const Icon(
-                  Icons.check_rounded,
-                  color: Colors.tealAccent,
+                    Opacity(
+                      opacity: muscleGroupController.text == '' ? 1 : 1,
+                      child: Container(
+                        color: Colors.blue,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        padding: const EdgeInsets.all(8.0),
+                        child: muscleGroupController.text == ''
+                            ? null
+                            : DropdownMenu(
+                                width: 150,
+                                controller: exerciseController,
+                                inputDecorationTheme:
+                                    const InputDecorationTheme(
+                                  border: InputBorder.none,
+                                ),
+                                menuStyle: MenuStyle(
+                                    padding:
+                                        MaterialStateProperty.all<EdgeInsets>(
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 20))),
+                                label: const Text(DropdownTitles.exercise),
+                                onSelected: (value) {
+                                  setState(() {
+                                    weightControllers[0].clear();
+                                    repsControllers[0].clear();
+                                    exerciseController.text = value.toString();
+                                  });
+                                },
+                                // width: MediaQuery.of(context).size.width * 0.75,
+                                dropdownMenuEntries:
+                                    getExercisesForMuscleGroup()),
+                      ),
+                    ),
+                    Opacity(
+                        opacity: exerciseController.text == '' ? 0 : 1,
+                        child: SizedBox(
+                          height: 400,
+                          width: 200,
+                          child: ListView.builder(
+                            itemCount: setsCount,
+                            itemBuilder: (context, index) {
+                              return SizedBox(
+                                height: 200,
+                                width: 200,
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        width: 100,
+                                        child: TextField(
+                                          maxLines: 1,
+                                          maxLength: 3,
+                                          enableSuggestions: false,
+                                          controller: repsControllers[index],
+                                          keyboardType: TextInputType.number,
+                                          decoration: const InputDecoration(
+                                            counterText: '',
+                                            helperText: DropdownTitles.reps,
+                                            suffixIcon: Icon(
+                                                Icons.onetwothree_rounded,
+                                                color: Colors.tealAccent),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        width: 100,
+                                        child: TextField(
+                                          maxLines: 1,
+                                          maxLength: 3,
+                                          enableSuggestions: false,
+                                          controller: weightControllers[index],
+                                          keyboardType: TextInputType.number,
+                                          decoration: const InputDecoration(
+                                            counterText: '',
+                                            helperText: DropdownTitles.weight,
+                                            suffixIcon: Icon(
+                                              Icons.onetwothree_rounded,
+                                              color: Colors.tealAccent,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      weightControllers.length - 1 == index
+                                          ? IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  repsControllers.add(
+                                                      TextEditingController());
+                                                  weightControllers.add(
+                                                      TextEditingController());
+                                                  setsCount++;
+                                                });
+                                              },
+                                              icon: const Icon(Icons.add))
+                                          : Container()
+                                    ]),
+                              );
+                            },
+                          ),
+                        ))
+                  ],
                 ),
-                onPressed: () {
-                  if (exerciseController.text == '' ||
-                      muscleGroupController.text == '' ||
-                      repsControllers[0].text == '' ||
-                      weightControllers[0].text == '') {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const AlertDialog(
-                            title: Text('error',
-                                style: TextStyle(color: Colors.amberAccent)),
-                            content: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: Text(
-                                'please fill in all fields',
-                              ),
-                            ),
-                          );
-                        });
-                    return;
-                  } else {
-                    Provider.of<ExercisePickerProvider>(context, listen: false)
-                        .setExercise(Exercise(
-                            name: exerciseController.text,
-                            muscleGroup: muscleGroupController.text,
-                            isExerciseDone: false,
-                            sets: [
-                          for (int i = 0; i < setsCount; i++)
-                            WorkoutSet(
-                                reps: int.parse(repsControllers[i].text),
-                                weight: double.parse(weightControllers[i].text),
-                                isDone: false)
-                        ]));
-                    Navigator.pop(context);
-                  }
-                },
-              )
-            ]),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.check_rounded,
+              color: Colors.tealAccent,
+            ),
+            onPressed: () {
+              if (exerciseController.text == '' ||
+                  muscleGroupController.text == '' ||
+                  repsControllers[0].text == '' ||
+                  weightControllers[0].text == '') {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const AlertDialog(
+                        title: Text('error',
+                            style: TextStyle(color: Colors.amberAccent)),
+                        content: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Text(
+                            'please fill in all fields',
+                          ),
+                        ),
+                      );
+                    });
+                return;
+              } else {
+                Provider.of<ExercisePickerProvider>(context, listen: false)
+                    .setExercise(Exercise(
+                        name: exerciseController.text,
+                        muscleGroup: muscleGroupController.text,
+                        isExerciseDone: false,
+                        sets: [
+                      for (int i = 0; i < setsCount; i++)
+                        WorkoutSet(
+                            reps: int.parse(repsControllers[i].text),
+                            weight: double.parse(weightControllers[i].text),
+                            isDone: false)
+                    ]));
+                Navigator.pop(context);
+              }
+            },
           )
         ]);
   }

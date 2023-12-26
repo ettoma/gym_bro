@@ -15,5 +15,10 @@ class ExercisePickerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void emptyList() {
+    exercises = [];
+    notifyListeners();
+  }
+
   get getExercises => exercises;
 }

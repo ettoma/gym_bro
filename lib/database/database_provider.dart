@@ -13,4 +13,9 @@ class DatabaseProvider extends ChangeNotifier {
     workoutList.clear();
     notifyListeners();
   }
+
+  void deleteWorkout(WorkoutModel workout) {
+    workoutList.remove(workout);
+    notifyListeners();
+  }
 }

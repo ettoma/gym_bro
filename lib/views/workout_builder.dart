@@ -68,6 +68,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
     return Scaffold(
       appBar: NavBar(
         pageTitle: PageNames.workoutBuilder,
+        blockBackButton: true,
       ),
       body: Column(
         children: [
@@ -138,6 +139,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                     } else {
                       saveWorkout(
                           exercisesFromProvider, workoutTitleController.text);
+                      exercisePickerProvider.emptyList();
                       Navigator.pop(context);
                     }
                   });
@@ -170,13 +172,11 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                   ? ColorPalette.darkText
                   : ColorPalette.lightText),
           onPressed: () {
-            showModalBottomSheet(
-                isScrollControlled: true,
+            showDialog(
+                // isScrollControlled: true,
                 context: (context),
                 builder: (context) {
-                  return SizedBox(
-                      height: deviceSize.height * 0.9,
-                      child: const ExercisePicker());
+                  return Dialog(child: const ExercisePicker());
                 });
           }),
     );
