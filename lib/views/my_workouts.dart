@@ -3,6 +3,7 @@ import 'package:gym_bro/database/data_model.dart';
 import 'package:gym_bro/database/database_provider.dart';
 import 'package:gym_bro/database/database_utils.dart';
 import 'package:gym_bro/global/text.dart';
+import 'package:gym_bro/views/live_workout.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
 import 'package:gym_bro/widgets/workout_dialog.dart';
 import 'package:gym_bro/widgets/workout_tile.dart';
@@ -43,6 +44,49 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                         itemCount: databaseProvider.workoutList.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                        child: SizedBox(
+                                      height: 100,
+                                      width: 200,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            Titles.startWorkout,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              LiveWorkout(
+                                                                workout:
+                                                                    databaseProvider
+                                                                            .workoutList[
+                                                                        index],
+                                                              )));
+                                            },
+                                            icon: const Icon(
+                                              Icons.check,
+                                              color: Colors.tealAccent,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ));
+                                  });
+                            },
                             onLongPress: () {
                               showDialog(
                                   barrierDismissible: true,

@@ -2,25 +2,21 @@ import 'dart:ui';
 
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
+import 'package:gym_bro/database/data_model.dart';
 import 'package:gym_bro/global/text.dart';
-import 'package:gym_bro/widgets/quick_workout_exercise_picker.dart';
-import 'package:gym_bro/widgets/workout_exercise_tile.dart';
-import 'package:provider/provider.dart';
 
-import '../global/colours.dart';
-import '../global/quick_workout_exercise_picker_provider.dart';
 import '../widgets/app_bar.dart';
+import '../widgets/live_workout_exercise_tile.dart';
 
-class QuickWorkout extends StatefulWidget {
-  const QuickWorkout({
-    super.key,
-  });
+class LiveWorkout extends StatefulWidget {
+  WorkoutModel workout;
+  LiveWorkout({super.key, required this.workout});
 
   @override
-  State<QuickWorkout> createState() => _QuickStartPageState();
+  State<LiveWorkout> createState() => _LiveWorkoutPageState();
 }
 
-class _QuickStartPageState extends State<QuickWorkout>
+class _LiveWorkoutPageState extends State<LiveWorkout>
     with SingleTickerProviderStateMixin {
   late final CustomTimerController _controller = CustomTimerController(
       vsync: this,
@@ -48,7 +44,7 @@ class _QuickStartPageState extends State<QuickWorkout>
 
     return Scaffold(
       appBar: NavBar(
-        pageTitle: PageNames.quickWorkout,
+        pageTitle: widget.workout.name,
         blockBackButton: true,
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -122,26 +118,18 @@ class _QuickStartPageState extends State<QuickWorkout>
             ],
           ),
         ),
-        Consumer<QuickWorkoutExercisePickerProvider>(
-            builder: (context, exercisePickerProvider, _) {
-          List<Exercise> exercisesFromProvider =
-              exercisePickerProvider.getExercises;
-          return Expanded(
+        Expanded(
             child: ListView.builder(
-              clipBehavior: Clip.antiAlias,
-              itemCount: exercisesFromProvider.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: WorkoutExerciseTile(
-                    exercise: exercisesFromProvider[index],
-                    exerciseIndex: index,
-                  ),
-                );
-              },
-            ),
-          );
-        }),
+                clipBehavior: Clip.antiAlias,
+                itemCount: widget.workout.exercises.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: LiveWorkoutExerciseTile(
+                        exercise: widget.workout.exercises[index],
+                        exerciseIndex: index,
+                      ));
+                })),
         SizedBox(
           height: 80,
           child: ClipRect(
@@ -155,27 +143,28 @@ class _QuickStartPageState extends State<QuickWorkout>
           ),
         )
       ]),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: brigthness == Brightness.dark
-              ? ColorPalette.darkBox
-              : ColorPalette.lightBox,
-          foregroundColor: brigthness == Brightness.dark
-              ? ColorPalette.lightText
-              : ColorPalette.darkText,
-          elevation: 1,
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            showDialog(
-                context: (context),
-                builder: (context) {
-                  return SizedBox(
-                      height: deviceSize.height * 0.9,
-                      child: Dialog(child: const QuickWorkoutExercisePicker()));
-                });
-          }),
+      // floatingActionButton: FloatingActionButton(
+      //     backgroundColor: brigthness == Brightness.dark
+      //         ? ColorPalette.darkBox
+      //         : ColorPalette.lightBox,
+      //     foregroundColor: brigthness == Brightness.dark
+      //         ? ColorPalette.lightText
+      //         : ColorPalette.darkText,
+      //     elevation: 1,
+      //     child: const Icon(
+      //       Icons.add,
+      //       color: Colors.white,
+      //     ),
+      //     onPressed: () {
+      //       showModalBottomSheet(
+      //           isScrollControlled: true,
+      //           context: (context),
+      //           builder: (context) {
+      //             return SizedBox(
+      //                 height: deviceSize.height * 0.9,
+      //                 child: const QuickWorkoutExercisePicker());
+      //           });
+      //     }),
     );
   }
 }

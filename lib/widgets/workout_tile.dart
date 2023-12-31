@@ -56,6 +56,7 @@ class WorkoutTile extends StatelessWidget {
               itemCount: workout.exercises.length,
               itemBuilder: (context, index) {
                 return Container(
+                  alignment: Alignment.center,
                   width: 100,
                   margin: const EdgeInsets.only(left: 10, top: 10),
                   padding: const EdgeInsets.all(5),

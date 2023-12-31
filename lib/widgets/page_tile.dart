@@ -54,6 +54,7 @@ Widget _switchPage(String pageTitle) {
       return const ProfilePage();
     case PageNames.quickWorkout:
       return const QuickWorkout();
+
     default:
       return const MyWorkouts();
   }

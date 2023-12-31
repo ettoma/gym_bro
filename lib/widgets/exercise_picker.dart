@@ -59,10 +59,9 @@ class _ExercisePickerState extends State<ExercisePicker> {
 
     return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            color: Colors.red,
             padding: const EdgeInsets.all(8.0),
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: const Text(
@@ -72,22 +71,21 @@ class _ExercisePickerState extends State<ExercisePicker> {
           ),
           LayoutBuilder(
             builder: (context, constraints) {
-              return Container(
+              return SizedBox(
                 width: constraints.maxWidth,
-                height: 400,
-                // height: 200,
-                color: Colors.limeAccent,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      color: Colors.red,
                       margin: const EdgeInsets.symmetric(
                           horizontal: 0, vertical: 5),
                       padding: const EdgeInsets.all(8.0),
                       child: DropdownMenu(
-                          width: 150,
+                          textStyle: const TextStyle(
+                              color: Colors.amberAccent,
+                              fontWeight: FontWeight.bold),
+                          width: constraints.maxWidth * 0.75,
                           controller: muscleGroupController,
                           inputDecorationTheme: const InputDecorationTheme(
                             border: InputBorder.none,
@@ -105,7 +103,6 @@ class _ExercisePickerState extends State<ExercisePicker> {
                               muscleGroupController.text = value.toString();
                             });
                           },
-                          // width: MediaQuery.of(context).size.width * 0.75,
                           dropdownMenuEntries: muscleGroups
                               .map<DropdownMenuEntry<String>>((String value) {
                             return DropdownMenuEntry(
@@ -117,14 +114,16 @@ class _ExercisePickerState extends State<ExercisePicker> {
                     Opacity(
                       opacity: muscleGroupController.text == '' ? 1 : 1,
                       child: Container(
-                        color: Colors.blue,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         padding: const EdgeInsets.all(8.0),
                         child: muscleGroupController.text == ''
                             ? null
                             : DropdownMenu(
-                                width: 150,
+                                textStyle: const TextStyle(
+                                    color: Colors.amberAccent,
+                                    fontWeight: FontWeight.bold),
+                                width: constraints.maxWidth * 0.75,
                                 controller: exerciseController,
                                 inputDecorationTheme:
                                     const InputDecorationTheme(
@@ -151,14 +150,12 @@ class _ExercisePickerState extends State<ExercisePicker> {
                     Opacity(
                         opacity: exerciseController.text == '' ? 0 : 1,
                         child: SizedBox(
-                          height: 400,
-                          width: 200,
+                          height: 350,
+                          width: constraints.maxWidth * 0.9,
                           child: ListView.builder(
                             itemCount: setsCount,
                             itemBuilder: (context, index) {
                               return SizedBox(
-                                height: 200,
-                                width: 200,
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -174,6 +171,9 @@ class _ExercisePickerState extends State<ExercisePicker> {
                                           keyboardType: TextInputType.number,
                                           decoration: const InputDecoration(
                                             counterText: '',
+                                            helperStyle: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14),
                                             helperText: DropdownTitles.reps,
                                             suffixIcon: Icon(
                                                 Icons.onetwothree_rounded,
@@ -184,18 +184,21 @@ class _ExercisePickerState extends State<ExercisePicker> {
                                       Container(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 10, vertical: 5),
-                                        width: 100,
+                                        width: 120,
                                         child: TextField(
                                           maxLines: 1,
-                                          maxLength: 3,
+                                          maxLength: 5,
                                           enableSuggestions: false,
                                           controller: weightControllers[index],
                                           keyboardType: TextInputType.number,
                                           decoration: const InputDecoration(
                                             counterText: '',
+                                            helperStyle: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14),
                                             helperText: DropdownTitles.weight,
                                             suffixIcon: Icon(
-                                              Icons.onetwothree_rounded,
+                                              Icons.monitor_weight_outlined,
                                               color: Colors.tealAccent,
                                             ),
                                           ),
