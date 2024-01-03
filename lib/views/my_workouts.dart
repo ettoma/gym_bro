@@ -48,43 +48,37 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                               showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return Dialog(
-                                        child: SizedBox(
-                                      height: 100,
-                                      width: 200,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Text(
-                                            Titles.startWorkout,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18),
-                                          ),
-                                          IconButton(
+                                    return AlertDialog(
+                                      title: const Text(Titles.startWorkout),
+                                      contentPadding: const EdgeInsets.all(20),
+                                      titleTextStyle:
+                                          const TextStyle(fontSize: 18),
+                                      actions: [
+                                        IconButton(
+                                            icon: Icon(Icons.clear),
                                             onPressed: () {
-                                              Navigator.of(context)
-                                                  .pushReplacement(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              LiveWorkout(
-                                                                workout:
-                                                                    databaseProvider
-                                                                            .workoutList[
-                                                                        index],
-                                                              )));
-                                            },
-                                            icon: const Icon(
-                                              Icons.check,
-                                              color: Colors.tealAccent,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ));
+                                              Navigator.of(context).pop();
+                                            }),
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LiveWorkout(
+                                                              workout:
+                                                                  databaseProvider
+                                                                          .workoutList[
+                                                                      index],
+                                                            )));
+                                          },
+                                          icon: const Icon(
+                                            Icons.check,
+                                            color: Colors.tealAccent,
+                                          ),
+                                        )
+                                      ],
+                                    );
                                   });
                             },
                             onLongPress: () {

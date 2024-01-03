@@ -263,20 +263,6 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18))),
-                              // Container(
-                              //   height: 5,
-                              //   width: 5,
-                              //   decoration: BoxDecoration(
-                              //       color: brigthness == Brightness.dark
-                              //           ? ColorPalette.darkText
-                              //           : ColorPalette.lightText,
-                              //       border: Border.all(
-                              //           color: brigthness == Brightness.dark
-                              //               ? ColorPalette.darkText
-                              //               : ColorPalette.lightText,
-                              //           width: 1),
-                              //       borderRadius: BorderRadius.circular(25)),
-                              // ),
                               Container(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 5),

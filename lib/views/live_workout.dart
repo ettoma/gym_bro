@@ -95,21 +95,25 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                           contentPadding: const EdgeInsets.all(20),
                           titleTextStyle: const TextStyle(fontSize: 18),
                           actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text(
-                                  'No',
-                                  style: TextStyle(color: Colors.amberAccent),
-                                )),
-                            TextButton(
-                                onPressed: () {
-                                  _controller.reset();
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Yes')),
+                            IconButton(
+                              icon: Icon(
+                                Icons.clear,
+                                color: Colors.redAccent,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.check,
+                              ),
+                              onPressed: () {
+                                _controller.reset();
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                            ),
                           ],
                         );
                       },

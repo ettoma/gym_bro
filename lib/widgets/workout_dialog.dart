@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../database/data_model.dart';
+import '../views/live_workout.dart';
 
 class WorkoutDialog extends StatelessWidget {
   final Size deviceSize;
@@ -14,7 +15,7 @@ class WorkoutDialog extends StatelessWidget {
     return Dialog(
       child: SizedBox(
         width: deviceSize.width * 0.8,
-        height: deviceSize.height * 0.5,
+        height: deviceSize.height * 0.6,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -27,9 +28,15 @@ class WorkoutDialog extends StatelessWidget {
                   workout.name,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 24,
                       color: Colors.amberAccent),
                 ),
+              ),
+              Container(
+                height: 1,
+                width: deviceSize.width * 0.8,
+                color: Colors.white10,
+                margin: const EdgeInsets.only(bottom: 10),
               ),
               Expanded(
                 child: ListView.builder(
@@ -38,13 +45,13 @@ class WorkoutDialog extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               workout.exercises[index].exercise,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                                fontSize: 20,
                               ),
                             ),
                             Padding(
@@ -67,13 +74,13 @@ class WorkoutDialog extends StatelessWidget {
                                               set.reps.toString(),
                                               style: const TextStyle(
                                                   fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
+                                                  // fontWeight: FontWeight.bold,
                                                   color: Colors.tealAccent),
                                             ),
                                             Text(set.weight.toString(),
                                                 style: const TextStyle(
                                                   fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
+                                                  // fontWeight: FontWeight.bold,
                                                 ))
                                           ],
                                         ),
@@ -87,6 +94,15 @@ class WorkoutDialog extends StatelessWidget {
                       );
                     },
                     itemCount: workout.exercises.length),
+              ),
+              TextButton(
+                child: Text('start workout'),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => LiveWorkout(workout: workout)),
+                  );
+                },
               ),
             ],
           ),
