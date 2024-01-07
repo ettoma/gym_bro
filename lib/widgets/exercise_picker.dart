@@ -19,16 +19,33 @@ class _ExercisePickerState extends State<ExercisePicker> {
   List<TextEditingController> repsControllers = [TextEditingController()];
   List<TextEditingController> weightControllers = [TextEditingController()];
 
-  FocusNode focusReps = FocusNode();
-
   int setsCount = 1;
 
   List<String> chestExercises = [];
+  List<String> absExercises = [];
+  List<String> calvesExercises = [];
+  List<String> shouldersExercises = [];
+  List<String> bicepsExercises = [];
+  List<String> tricepsExercises = [];
+  List<String> quadsExercises = [];
+  List<String> hamstringsExercises = [];
   List<String> latsExercises = [];
 
   Future<void> updateAllExercises() async {
-    chestExercises = await ExerciseList().chestExercises();
-    latsExercises = await ExerciseList().latsExercises();
+    chestExercises =
+        await ExerciseList().exercisesForMuscleGroup(MuscleGroups.chest);
+    latsExercises =
+        await ExerciseList().exercisesForMuscleGroup(MuscleGroups.lats);
+    absExercises =
+        await ExerciseList().exercisesForMuscleGroup(MuscleGroups.abs);
+    hamstringsExercises =
+        await ExerciseList().exercisesForMuscleGroup(MuscleGroups.hamstrings);
+    bicepsExercises =
+        await ExerciseList().exercisesForMuscleGroup(MuscleGroups.biceps);
+    tricepsExercises =
+        await ExerciseList().exercisesForMuscleGroup(MuscleGroups.triceps);
+    shouldersExercises =
+        await ExerciseList().exercisesForMuscleGroup(MuscleGroups.shoulders);
   }
 
   @override
@@ -52,9 +69,52 @@ class _ExercisePickerState extends State<ExercisePicker> {
               value: value,
             );
           }).toList();
-
         case 'lats':
           return latsExercises.map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry(
+              label: value,
+              value: value,
+            );
+          }).toList();
+        case 'abdominals':
+          return absExercises.map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry(
+              label: value,
+              value: value,
+            );
+          }).toList();
+        case 'shoulders':
+          return absExercises.map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry(
+              label: value,
+              value: value,
+            );
+          }).toList();
+        case 'triceps':
+          return tricepsExercises
+              .map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry(
+              label: value,
+              value: value,
+            );
+          }).toList();
+        case 'hamstrings':
+          return hamstringsExercises
+              .map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry(
+              label: value,
+              value: value,
+            );
+          }).toList();
+        case 'biceps':
+          return bicepsExercises.map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry(
+              label: value,
+              value: value,
+            );
+          }).toList();
+        case 'calves':
+          return calvesExercises.map<DropdownMenuEntry<String>>((String value) {
             return DropdownMenuEntry(
               label: value,
               value: value,

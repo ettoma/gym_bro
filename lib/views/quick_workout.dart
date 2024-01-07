@@ -37,8 +37,8 @@ class _QuickStartPageState extends State<QuickWorkout>
 
   @override
   void initState() {
-    super.initState();
     _controller.start();
+    super.initState();
   }
 
   @override
@@ -109,6 +109,10 @@ class _QuickStartPageState extends State<QuickWorkout>
                                 )),
                             IconButton(
                                 onPressed: () {
+                                  Provider.of<QuickWorkoutExercisePickerProvider>(
+                                          context,
+                                          listen: false)
+                                      .emptyList();
                                   _controller.reset();
                                   Navigator.pop(context);
                                   Navigator.pop(context);
@@ -175,7 +179,7 @@ class _QuickStartPageState extends State<QuickWorkout>
                 builder: (context) {
                   return SizedBox(
                       height: deviceSize.height * 0.9,
-                      child: Dialog(child: const QuickWorkoutExercisePicker()));
+                      child: const Dialog(child: QuickWorkoutExercisePicker()));
                 });
           }),
     );
