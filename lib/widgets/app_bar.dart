@@ -36,21 +36,22 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
                       contentPadding: const EdgeInsets.all(20),
                       titleTextStyle: const TextStyle(fontSize: 18),
                       actions: [
-                        TextButton(
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(
+                            Icons.clear,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                        IconButton(
                             onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text(
-                              'No',
-                              style: TextStyle(color: Colors.amberAccent),
-                            )),
-                        TextButton(
-                            onPressed: () {
-                              if (pageTitle == 'workout builder') {
+                              if (pageTitle == PageNames.workoutBuilder) {
                                 Provider.of<ExercisePickerProvider>(context,
                                         listen: false)
                                     .emptyList();
-                              } else if (pageTitle == 'quick start') {
+                              } else if (pageTitle == PageNames.quickWorkout) {
                                 Provider.of<QuickWorkoutExercisePickerProvider>(
                                         context,
                                         listen: false)
@@ -60,7 +61,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },
-                            child: const Text('Yes')),
+                            icon: const Icon(Icons.check)),
                       ],
                     );
                   }),

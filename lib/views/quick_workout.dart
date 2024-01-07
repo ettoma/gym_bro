@@ -99,21 +99,23 @@ class _QuickStartPageState extends State<QuickWorkout>
                           contentPadding: const EdgeInsets.all(20),
                           titleTextStyle: const TextStyle(fontSize: 18),
                           actions: [
-                            TextButton(
+                            IconButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: const Text(
-                                  'No',
-                                  style: TextStyle(color: Colors.amberAccent),
+                                icon: const Icon(
+                                  Icons.clear,
+                                  color: Colors.redAccent,
                                 )),
-                            TextButton(
+                            IconButton(
                                 onPressed: () {
                                   _controller.reset();
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                 },
-                                child: const Text('Yes')),
+                                icon: const Icon(
+                                  Icons.check,
+                                )),
                           ],
                         );
                       },

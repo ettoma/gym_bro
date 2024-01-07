@@ -56,8 +56,13 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
               controller: _controller,
               builder: (state, time) {
                 return Text("${time.hours}:${time.minutes}:${time.seconds}",
-                    style: const TextStyle(
-                        fontSize: 36.0, fontWeight: FontWeight.bold));
+                    style: TextStyle(
+                        fontSize: 36.0,
+                        fontWeight: FontWeight.bold,
+                        color:
+                            _controller.state.value == CustomTimerState.paused
+                                ? Colors.white24
+                                : Colors.white));
               },
             )),
         Container(
@@ -85,7 +90,9 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                 },
               ),
               IconButton(
-                  icon: const Icon(Icons.stop_rounded),
+                  icon: const Icon(
+                    Icons.stop_rounded,
+                  ),
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -96,7 +103,7 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                           titleTextStyle: const TextStyle(fontSize: 18),
                           actions: [
                             IconButton(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.clear,
                                 color: Colors.redAccent,
                               ),
@@ -105,7 +112,7 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                               },
                             ),
                             IconButton(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.check,
                               ),
                               onPressed: () {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_bro/global/exercise_picker_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../global/exercise_list.dart';
 import '../global/quick_workout_exercise_picker_provider.dart';
 import '../global/text.dart';
 
@@ -22,14 +23,25 @@ class _ExercisePickerState extends State<ExercisePicker> {
 
   int setsCount = 1;
 
+  List<String> chestExercises = [];
+  List<String> latsExercises = [];
+
+  Future<void> updateAllExercises() async {
+    chestExercises = await ExerciseList().chestExercises();
+    latsExercises = await ExerciseList().latsExercises();
+  }
+
+  @override
+  void initState() {
+    updateAllExercises();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> muscleGroups = MuscleGroups.muscleGroups;
 
     List<DropdownMenuEntry<String>> getExercisesForMuscleGroup() {
-      List<String> chestExercises = ChestExercises.exercises;
-      List<String> backExercises = BackExercises.exercises;
-
       String muscleGroup = muscleGroupController.text;
 
       switch (muscleGroup) {
@@ -41,8 +53,8 @@ class _ExercisePickerState extends State<ExercisePicker> {
             );
           }).toList();
 
-        case 'back':
-          return backExercises.map<DropdownMenuEntry<String>>((String value) {
+        case 'lats':
+          return latsExercises.map<DropdownMenuEntry<String>>((String value) {
             return DropdownMenuEntry(
               label: value,
               value: value,
@@ -261,8 +273,9 @@ class _ExercisePickerState extends State<ExercisePicker> {
                         sets: [
                       for (int i = 0; i < setsCount; i++)
                         WorkoutSet(
-                            reps: int.parse(repsControllers[i].text),
-                            weight: double.parse(weightControllers[i].text),
+                            reps: int.tryParse(repsControllers[i].text) ?? 0,
+                            weight:
+                                double.tryParse(weightControllers[i].text) ?? 0,
                             isDone: false)
                     ]));
                 Navigator.pop(context);

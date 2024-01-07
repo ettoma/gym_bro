@@ -144,7 +144,9 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Container(
-                                                    padding: EdgeInsets.all(12),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12),
                                                     width: 75,
                                                     child: TextField(
                                                         keyboardType:
@@ -152,7 +154,8 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
                                                                 .number,
                                                         decoration:
                                                             const InputDecoration(
-                                                          labelText: 'reps',
+                                                          labelText:
+                                                              GeneralText.reps,
                                                         ),
                                                         controller:
                                                             repsController,
@@ -177,7 +180,9 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
                                                         }),
                                                   ),
                                                   Container(
-                                                    padding: EdgeInsets.all(12),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12),
                                                     width: 75,
                                                     child: TextField(
                                                         keyboardType:
@@ -186,7 +191,8 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
                                                                 decimal: true),
                                                         decoration:
                                                             const InputDecoration(
-                                                          labelText: 'weight',
+                                                          labelText: GeneralText
+                                                              .weight,
                                                         ),
                                                         controller:
                                                             weightController,
@@ -255,25 +261,27 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
                               borderRadius: BorderRadius.circular(10)),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  child: Text(sets[index].reps.toString(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18))),
                               Container(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 5),
                                   child: Text(
                                     '${sets[index].weight}$measureUnit',
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        // fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                     overflow: TextOverflow.fade,
                                     softWrap: false,
                                   )),
+                              Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  child:
+                                      Text('${sets[index].reps.toString()} x',
+                                          style: const TextStyle(
+                                              // fontWeight: FontWeight.bold,
+                                              fontSize: 18))),
                             ],
                           ),
                         ),

@@ -55,7 +55,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                                           const TextStyle(fontSize: 18),
                                       actions: [
                                         IconButton(
-                                            icon: Icon(Icons.clear),
+                                            icon: const Icon(Icons.clear),
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             }),
@@ -99,11 +99,42 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                                   Map.from({DismissDirection.endToStart: 0.3}),
                               direction: DismissDirection.endToStart,
                               confirmDismiss: (direction) async {
-                                await DatabaseUtils().deleteWorkout(
-                                    databaseProvider.workoutList[index]);
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        titleTextStyle:
+                                            const TextStyle(fontSize: 18),
+                                        title: const Text(Titles.deleteWorkout),
+                                        actions: [
+                                          IconButton(
+                                              icon: const Icon(
+                                                Icons.clear,
+                                                color: Colors.redAccent,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              }),
+                                          IconButton(
+                                            onPressed: () async {
+                                              await DatabaseUtils()
+                                                  .deleteWorkout(
+                                                      databaseProvider
+                                                          .workoutList[index]);
 
-                                databaseProvider.deleteWorkout(
-                                    databaseProvider.workoutList[index]);
+                                              databaseProvider.deleteWorkout(
+                                                  databaseProvider
+                                                      .workoutList[index]);
+
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: const Icon(
+                                              Icons.check,
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    });
                                 return;
                               },
                               background: stackBehindDismiss(),

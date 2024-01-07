@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gym_bro/global/exercise_picker_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../global/exercise_list.dart';
 import '../global/quick_workout_exercise_picker_provider.dart';
 import '../global/text.dart';
 
@@ -22,14 +22,32 @@ class _QuickWorkoutExercisePickerState
 
   int setsCount = 1;
 
+  List<String> chestExercises = [];
+  List<String> absExercises = [];
+  List<String> calvesExercises = [];
+  List<String> shouldersExercises = [];
+  List<String> bicepsExercises = [];
+  List<String> tricepsExercises = [];
+  List<String> quadsExercises = [];
+  List<String> hamstringsExercises = [];
+  List<String> latsExercises = [];
+
+  Future<void> updateAllExercises() async {
+    chestExercises = await ExerciseList().chestExercises();
+    latsExercises = await ExerciseList().latsExercises();
+  }
+
+  @override
+  void initState() {
+    updateAllExercises();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> muscleGroups = MuscleGroups.muscleGroups;
 
     List<DropdownMenuEntry<String>> getExercisesForMuscleGroup() {
-      List<String> chestExercises = ChestExercises.exercises;
-      List<String> backExercises = BackExercises.exercises;
-
       String muscleGroup = muscleGroupController.text;
 
       switch (muscleGroup) {
@@ -41,8 +59,8 @@ class _QuickWorkoutExercisePickerState
             );
           }).toList();
 
-        case 'back':
-          return backExercises.map<DropdownMenuEntry<String>>((String value) {
+        case 'lats':
+          return latsExercises.map<DropdownMenuEntry<String>>((String value) {
             return DropdownMenuEntry(
               label: value,
               value: value,
@@ -82,6 +100,7 @@ class _QuickWorkoutExercisePickerState
                           horizontal: 0, vertical: 5),
                       padding: const EdgeInsets.all(8.0),
                       child: DropdownMenu(
+                          enableFilter: true,
                           textStyle: const TextStyle(
                               color: Colors.amberAccent,
                               fontWeight: FontWeight.bold),
