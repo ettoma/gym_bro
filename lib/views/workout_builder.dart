@@ -3,8 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:gym_bro/database/database_utils.dart';
 import 'package:gym_bro/global/exercise_picker_provider.dart';
-import 'package:gym_bro/global/quick_workout_exercise_picker_provider.dart'
-    as qwep;
+
 import 'package:gym_bro/widgets/app_bar.dart';
 import 'package:gym_bro/widgets/exercise_picker.dart';
 import 'package:gym_bro/widgets/exercise_tile.dart';
@@ -13,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../database/data_model.dart';
 import '../database/database_provider.dart';
 import '../global/colours.dart';
+import '../global/quick_workout_exercise_picker_provider.dart' as qwep;
 import '../global/text.dart';
 
 class WorkoutBuilder extends StatefulWidget {
@@ -44,7 +44,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
           muscleGroup: exercise.muscleGroup,
           sets: exercise.sets
               .map((e) =>
-                  WorkoutSet(isDone: false, reps: e.reps, weight: e.weight))
+                  WorkoutSet(reps: e.reps, weight: e.weight, isDone: e.isDone))
               .toList(),
         ));
       }
@@ -176,7 +176,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                 // isScrollControlled: true,
                 context: (context),
                 builder: (context) {
-                  return Dialog(child: const ExercisePicker());
+                  return const Dialog(child: ExercisePicker());
                 });
           }),
     );

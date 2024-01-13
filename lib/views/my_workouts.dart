@@ -161,8 +161,8 @@ class _MyWorkoutsState extends State<MyWorkouts> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const WorkoutBuilder()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => WorkoutBuilder()));
           }),
     );
   }

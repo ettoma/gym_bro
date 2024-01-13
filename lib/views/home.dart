@@ -41,9 +41,9 @@ class _HomeState extends State<Home> {
         // ExercisesHelper().getExercises();
         // ExerciseList().chestExercises();
 
-        // Provider.of<DatabaseProvider>(context, listen: false)
-        //     .deleteAllWorkouts();
-        // DatabaseUtils().deleteAllWorkouts();
+        Provider.of<DatabaseProvider>(context, listen: false)
+            .deleteAllWorkouts();
+        DatabaseUtils().deleteAllWorkouts();
       }),
       body: Center(
         child: GridView.builder(

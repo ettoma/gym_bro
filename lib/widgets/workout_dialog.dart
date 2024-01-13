@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gym_bro/global/exercise_picker_provider.dart';
+import 'package:gym_bro/views/workout_builder.dart';
+import 'package:provider/provider.dart';
 
 import '../database/data_model.dart';
+import '../global/quick_workout_exercise_picker_provider.dart' as qwep;
 import '../global/text.dart';
 import '../views/live_workout.dart';
 
@@ -34,12 +38,6 @@ class WorkoutDialog extends StatelessWidget {
                       color: Colors.amberAccent),
                 ),
               ),
-              // Container(
-              //   height: 1,
-              //   width: deviceSize.width * 0.8,
-              //   color: Colors.white10,
-              //   margin: const EdgeInsets.only(bottom: 10),
-              // ),
               Expanded(
                 child: ListView.builder(
                     itemBuilder: (context, index) {
@@ -114,6 +112,28 @@ class WorkoutDialog extends StatelessWidget {
                   );
                 },
               ),
+              TextButton(
+                child: Text('edit'),
+                onPressed: () {
+                  for (var exercise in workout.exercises) {
+                    Provider.of<ExercisePickerProvider>(context, listen: false)
+                        .setExercise(qwep.Exercise(
+                            name: exercise.exercise,
+                            muscleGroup: exercise.muscleGroup,
+                            isExerciseDone: false,
+                            sets: [
+                          for (int i = 0; i < exercise.sets.length; i++)
+                            qwep.WorkoutSet(
+                                reps: exercise.sets[i].reps,
+                                weight: exercise.sets[i].weight,
+                                isDone: false)
+                        ]));
+                  }
+
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const WorkoutBuilder()));
+                },
+              )
             ],
           ),
         ),
