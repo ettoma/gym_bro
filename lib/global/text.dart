@@ -31,6 +31,13 @@ class Titles {
 
 class Buttons {
   static const String startWorkout = 'start workout';
+  static const String saveWorkout = 'save workout';
+}
+
+class Errors {
+  static const String error = 'error';
+  static const String missingWorkoutTitle = 'please enter a workout title';
+  static const String missingExercise = 'please add at least one exercise';
 }
 
 class DropdownTitles {

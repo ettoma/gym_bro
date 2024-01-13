@@ -16,18 +16,19 @@ import '../global/quick_workout_exercise_picker_provider.dart' as qwep;
 import '../global/text.dart';
 
 class WorkoutBuilder extends StatefulWidget {
-  const WorkoutBuilder({super.key});
+  String? existingWorkoutTitle;
+  int? workoutId;
+  WorkoutBuilder({super.key, this.existingWorkoutTitle, this.workoutId});
 
   @override
   State<WorkoutBuilder> createState() => _WorkoutBuilderState();
 }
 
-class _WorkoutBuilderState extends State<WorkoutBuilder> {
-  TextEditingController workoutTitleController = TextEditingController();
+TextEditingController workoutTitleController = TextEditingController();
 
+class _WorkoutBuilderState extends State<WorkoutBuilder> {
   @override
   Widget build(BuildContext context) {
-    Size deviceSize = MediaQuery.of(context).size;
     Brightness brigthness = MediaQuery.of(context).platformBrightness;
 
     Future<void> saveWorkout(
@@ -48,6 +49,13 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
               .toList(),
         ));
       }
+
+      //TODO: implement update workout DB and provider
+      // if (widget.workoutId != null) {
+      //   DatabaseUtils().updateWorkout(
+
+      //   )
+      // }
 
       DatabaseUtils().insertWorkout(
         WorkoutModel(
@@ -73,7 +81,6 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
       body: Column(
         children: [
           TextField(
-            autofocus: workoutTitleController.text.isEmpty ? true : false,
             style: Theme.of(context)
                 .textTheme
                 .headlineMedium!
@@ -111,7 +118,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                   exercisePickerProvider.getExercises;
 
               return TextButton(
-                  child: const Text('save workout'),
+                  child: const Text(Buttons.saveWorkout),
                   onPressed: () {
                     if (workoutTitleController.text.isEmpty ||
                         exercisesFromProvider.isEmpty) {
@@ -120,15 +127,15 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                           builder: (context) {
                             String getErrorMessage() {
                               if (workoutTitleController.text.isEmpty) {
-                                return 'please enter a workout title';
+                                return Errors.missingWorkoutTitle;
                               } else {
-                                return 'please add at least one exercise';
+                                return Errors.missingExercise;
                               }
                             }
 
                             return AlertDialog(
                               title: const Text(
-                                'error',
+                                Errors.error,
                                 style: TextStyle(color: Colors.amberAccent),
                               ),
                               content: Padding(
@@ -173,7 +180,6 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                   : ColorPalette.lightText),
           onPressed: () {
             showDialog(
-                // isScrollControlled: true,
                 context: (context),
                 builder: (context) {
                   return const Dialog(child: ExercisePicker());

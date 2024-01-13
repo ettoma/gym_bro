@@ -131,7 +131,8 @@ class WorkoutDialog extends StatelessWidget {
                   }
 
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const WorkoutBuilder()));
+                      builder: (context) =>
+                          WorkoutBuilder(existingWorkoutTitle: workout.name)));
                 },
               )
             ],
