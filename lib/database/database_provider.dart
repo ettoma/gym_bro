@@ -9,6 +9,16 @@ class DatabaseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateWorkoutList(WorkoutModel workout) {
+    for (var w in workoutList) {
+      if (w.id == workout.id) {
+        w = workout;
+      }
+    }
+
+    notifyListeners();
+  }
+
   void deleteAllWorkouts() {
     workoutList.clear();
     notifyListeners();

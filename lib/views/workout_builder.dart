@@ -17,8 +17,9 @@ import '../global/text.dart';
 
 class WorkoutBuilder extends StatefulWidget {
   String? existingWorkoutTitle;
-  int? workoutId;
-  WorkoutBuilder({super.key, this.existingWorkoutTitle, this.workoutId});
+  int? existingWorkoutId;
+  WorkoutBuilder(
+      {super.key, this.existingWorkoutTitle, this.existingWorkoutId});
 
   @override
   State<WorkoutBuilder> createState() => _WorkoutBuilderState();
@@ -50,27 +51,38 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
         ));
       }
 
-      //TODO: implement update workout DB and provider
-      // if (widget.workoutId != null) {
-      //   DatabaseUtils().updateWorkout(
-
-      //   )
-      // }
-
-      DatabaseUtils().insertWorkout(
-        WorkoutModel(
-            id: dbSize + 1,
-            name: workoutTitle,
-            exercises: exerciseModels,
-            isFavourite: false),
-      );
-      Provider.of<DatabaseProvider>(context, listen: false).addWorkoutToList(
-        WorkoutModel(
-            id: dbSize + 1,
-            name: workoutTitle,
-            exercises: exerciseModels,
-            isFavourite: false),
-      );
+      if (widget.existingWorkoutId != null) {
+        DatabaseUtils().updateExistingWorkout(
+            widget.existingWorkoutId!,
+            WorkoutModel(
+              id: widget.existingWorkoutId!,
+              name: workoutTitle,
+              exercises: exerciseModels,
+              isFavourite: false,
+            ));
+        Provider.of<DatabaseProvider>(context, listen: false).updateWorkoutList(
+          WorkoutModel(
+              id: widget.existingWorkoutId!,
+              name: workoutTitle,
+              exercises: exerciseModels,
+              isFavourite: false),
+        );
+      } else {
+        DatabaseUtils().insertWorkout(
+          WorkoutModel(
+              id: dbSize + 1,
+              name: workoutTitle,
+              exercises: exerciseModels,
+              isFavourite: false),
+        );
+        Provider.of<DatabaseProvider>(context, listen: false).addWorkoutToList(
+          WorkoutModel(
+              id: dbSize + 1,
+              name: workoutTitle,
+              exercises: exerciseModels,
+              isFavourite: false),
+        );
+      }
     }
 
     return Scaffold(

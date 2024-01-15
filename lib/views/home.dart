@@ -8,6 +8,7 @@ import 'package:gym_bro/exercises/exercises_helper.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
 import 'package:provider/provider.dart';
 
+import '../database/data_model.dart';
 import '../global/exercise_list.dart';
 import '../global/text.dart';
 import '../widgets/page_tile.dart';
@@ -40,6 +41,24 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(onPressed: () {
         // ExercisesHelper().getExercises();
         // ExerciseList().chestExercises();
+
+        // DatabaseUtils().getAllWorkouts();
+
+        // DatabaseUtils().updateExistingWorkout(
+        //     1,
+        //     WorkoutModel(
+        //       id: 1,
+        //       name: 'a new test update workout',
+        //       exercises: [
+        //         ExerciseModel(
+        //           id: 1,
+        //           muscleGroup: 'chest',
+        //           exercise: 'bench press',
+        //           sets: [WorkoutSet(reps: 10, weight: 20.0, isDone: false)],
+        //         )
+        //       ],
+        //       isFavourite: false,
+        //     ));
 
         Provider.of<DatabaseProvider>(context, listen: false)
             .deleteAllWorkouts();

@@ -106,6 +106,28 @@ class DatabaseUtils {
     ]);
   }
 
+  Future<void> updateExistingWorkout(
+      int existingWorkoutId, WorkoutModel newWorkout) async {
+    await initialise();
+
+    List<String> exercisesList = [];
+
+    for (var e in newWorkout.exercises) {
+      exercisesList.add(
+        '{"name":"${e.exercise}","muscleGroup":"${e.muscleGroup}","sets":${e.sets.map((set) => '{"reps":${set.reps},"weight":${set.weight},"isDone":${set.isDone}}').toList().toString()}}',
+      );
+    }
+
+    database.rawQuery(
+        'UPDATE workouts SET workoutName = ?, exercises = ?, isFavourite = ? WHERE id = ?',
+        [
+          newWorkout.name,
+          exercisesList.toString(),
+          "false",
+          existingWorkoutId
+        ]);
+  }
+
   Future<List<WorkoutModel>> getAllWorkouts() async {
     await initialise();
     final List<Map<String, dynamic>> maps =
