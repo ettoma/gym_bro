@@ -32,6 +32,7 @@ class Titles {
 class Buttons {
   static const String startWorkout = 'start workout';
   static const String saveWorkout = 'save workout';
+  static const String edit = 'edit';
 }
 
 class Errors {

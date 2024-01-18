@@ -12,11 +12,20 @@ class DatabaseProvider extends ChangeNotifier {
   void updateWorkoutList(WorkoutModel workout) {
     for (var w in workoutList) {
       if (w.id == workout.id) {
-        w = workout;
+        workoutList[workoutList.indexOf(w)] = workout;
       }
     }
 
     notifyListeners();
+  }
+
+  WorkoutModel? getWorkoutById(int workoutId) {
+    for (var w in workoutList) {
+      if (w.id == workoutId) {
+        return w;
+      }
+    }
+    return null;
   }
 
   void deleteAllWorkouts() {
