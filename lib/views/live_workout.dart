@@ -154,28 +154,6 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
           ),
         )
       ]),
-      // floatingActionButton: FloatingActionButton(
-      //     backgroundColor: brigthness == Brightness.dark
-      //         ? ColorPalette.darkBox
-      //         : ColorPalette.lightBox,
-      //     foregroundColor: brigthness == Brightness.dark
-      //         ? ColorPalette.lightText
-      //         : ColorPalette.darkText,
-      //     elevation: 1,
-      //     child: const Icon(
-      //       Icons.add,
-      //       color: Colors.white,
-      //     ),
-      //     onPressed: () {
-      //       showModalBottomSheet(
-      //           isScrollControlled: true,
-      //           context: (context),
-      //           builder: (context) {
-      //             return SizedBox(
-      //                 height: deviceSize.height * 0.9,
-      //                 child: const QuickWorkoutExercisePicker());
-      //           });
-      //     }),
     );
   }
 }

@@ -69,7 +69,7 @@ class WorkoutDialog extends StatelessWidget {
                                         for (var set in w.exercises[index].sets)
                                           Container(
                                             margin: const EdgeInsets.only(
-                                                top: 7, right: 5),
+                                                top: 7, right: 10),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,

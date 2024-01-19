@@ -10,6 +10,11 @@ class ExercisePickerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeExerciseFromList(int exerciseIndex) {
+    exercises.removeAt(exerciseIndex);
+    notifyListeners();
+  }
+
   void setIsDone(int exerciseIndex, int setIndex, bool value) {
     exercises[exerciseIndex].sets[setIndex].isDone = value;
     notifyListeners();

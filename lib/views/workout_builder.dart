@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gym_bro/database/database_utils.dart';
 import 'package:gym_bro/global/exercise_picker_provider.dart';
 
@@ -93,6 +94,8 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
       body: Column(
         children: [
           TextField(
+            keyboardType: TextInputType.text,
+            maxLength: 30,
             style: Theme.of(context)
                 .textTheme
                 .headlineMedium!
@@ -116,8 +119,20 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                 itemBuilder: (context, index) {
                   return Container(
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: ExerciseTile(
-                      exercise: exercisesFromProvider[index],
+                    child: Dismissible(
+                      background: stackBehindDismiss(),
+                      key: UniqueKey(),
+                      dismissThresholds:
+                          Map.from({DismissDirection.endToStart: 0.3}),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        exercisePickerProvider.removeExerciseFromList(
+                            exercisesFromProvider
+                                .indexOf(exercisesFromProvider[index]));
+                      },
+                      child: ExerciseTile(
+                        exercise: exercisesFromProvider[index],
+                      ),
                     ),
                   );
                 },
@@ -199,4 +214,19 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
           }),
     );
   }
+}
+
+Widget stackBehindDismiss() {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.redAccent,
+    ),
+    alignment: Alignment.centerRight,
+    padding: const EdgeInsets.only(right: 20.0),
+    child: const Icon(
+      Icons.delete,
+      color: Colors.white,
+    ),
+  );
 }
