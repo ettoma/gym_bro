@@ -20,6 +20,15 @@ class ExercisePickerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateExercise(Exercise newExercise) {
+    for (var e in exercises) {
+      if (e.name == newExercise.name) {
+        exercises[exercises.indexOf(e)] = newExercise;
+      }
+    }
+    notifyListeners();
+  }
+
   void emptyList() {
     exercises = [];
     notifyListeners();

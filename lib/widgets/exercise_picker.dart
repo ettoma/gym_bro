@@ -7,17 +7,18 @@ import '../global/quick_workout_exercise_picker_provider.dart';
 import '../global/text.dart';
 
 class ExercisePicker extends StatefulWidget {
-  const ExercisePicker({super.key});
+  Exercise? existingExercise;
+  ExercisePicker({super.key, this.existingExercise});
 
   @override
   State<ExercisePicker> createState() => _ExercisePickerState();
 }
 
 class _ExercisePickerState extends State<ExercisePicker> {
-  TextEditingController muscleGroupController = TextEditingController();
-  TextEditingController exerciseController = TextEditingController();
-  List<TextEditingController> repsControllers = [TextEditingController()];
-  List<TextEditingController> weightControllers = [TextEditingController()];
+  late TextEditingController muscleGroupController;
+  late TextEditingController exerciseController;
+  late List<TextEditingController> repsControllers;
+  late List<TextEditingController> weightControllers;
 
   int setsCount = 1;
 
@@ -51,6 +52,21 @@ class _ExercisePickerState extends State<ExercisePicker> {
   @override
   void initState() {
     updateAllExercises();
+    muscleGroupController =
+        TextEditingController(text: widget.existingExercise?.muscleGroup ?? '');
+    exerciseController =
+        TextEditingController(text: widget.existingExercise?.name ?? '');
+    repsControllers = List.generate(
+      widget.existingExercise?.sets.length ?? 1,
+      (index) => TextEditingController(
+          text: widget.existingExercise?.sets[index].reps.toString() ?? ''),
+    );
+    weightControllers = List.generate(
+      widget.existingExercise?.sets.length ?? 1,
+      (index) => TextEditingController(
+          text: widget.existingExercise?.sets[index].weight.toString() ?? ''),
+    );
+
     super.initState();
   }
 
@@ -336,21 +352,43 @@ class _ExercisePickerState extends State<ExercisePicker> {
                       });
                   return;
                 } else {
-                  Provider.of<ExercisePickerProvider>(context, listen: false)
-                      .setExercise(Exercise(
+                  if (widget.existingExercise != null) {
+                    Provider.of<ExercisePickerProvider>(context, listen: false)
+                        .updateExercise(
+                      Exercise(
                           name: exerciseController.text,
                           muscleGroup: muscleGroupController.text,
                           isExerciseDone: false,
                           sets: [
-                        for (int i = 0; i < setsCount; i++)
-                          WorkoutSet(
-                              reps: int.tryParse(repsControllers[i].text) ?? 0,
-                              weight:
-                                  double.tryParse(weightControllers[i].text) ??
+                            for (int i = 0; i < setsCount; i++)
+                              WorkoutSet(
+                                  reps: int.tryParse(repsControllers[i].text) ??
                                       0,
-                              isDone: false)
-                      ]));
-                  Navigator.pop(context);
+                                  weight: double.tryParse(
+                                          weightControllers[i].text) ??
+                                      0,
+                                  isDone: false)
+                          ]),
+                    );
+                    Navigator.pop(context);
+                  } else {
+                    Provider.of<ExercisePickerProvider>(context, listen: false)
+                        .setExercise(Exercise(
+                            name: exerciseController.text,
+                            muscleGroup: muscleGroupController.text,
+                            isExerciseDone: false,
+                            sets: [
+                          for (int i = 0; i < setsCount; i++)
+                            WorkoutSet(
+                                reps:
+                                    int.tryParse(repsControllers[i].text) ?? 0,
+                                weight: double.tryParse(
+                                        weightControllers[i].text) ??
+                                    0,
+                                isDone: false)
+                        ]));
+                    Navigator.pop(context);
+                  }
                 }
               },
             )

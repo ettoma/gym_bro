@@ -44,9 +44,12 @@ class DatabaseUtils {
     await openDatabase(
       join(await getPathToDB(), 'workout_database12.db'),
       onCreate: (db, version) async {
-        return await db.execute(
+        await db.execute(
           'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN)',
         );
+        await db.execute(
+            'CREATE TABLE workoutLogs(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN)');
+        return;
       },
       version: 1,
     ).then((db) {
@@ -210,5 +213,24 @@ class DatabaseUtils {
   Future<void> deleteWorkout(WorkoutModel workout) async {
     await initialise();
     database.rawQuery('DELETE FROM workouts WHERE id = ?', [workout.id]);
+  }
+
+  Future<void> saveCompletedWorkout(WorkoutModel workout) async {
+    await initialise();
+
+    List<String> exercisesList = [];
+
+    for (var e in workout.exercises) {
+      exercisesList.add(
+        '{"name":"${e.exercise}","muscleGroup":"${e.muscleGroup}","sets":${e.sets.map((set) => '{"reps":${set.reps},"weight":${set.weight},"isDone":${set.isDone}}').toList().toString()}}',
+      );
+    }
+
+    database.rawQuery('INSERT INTO workoutLogs VALUES (?,?,?,?)', [
+      workout.id,
+      workout.name,
+      exercisesList.toString(),
+      'false',
+    ]);
   }
 }

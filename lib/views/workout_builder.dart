@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gym_bro/database/database_utils.dart';
 import 'package:gym_bro/global/exercise_picker_provider.dart';
 
@@ -130,8 +129,21 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
                             exercisesFromProvider
                                 .indexOf(exercisesFromProvider[index]));
                       },
-                      child: ExerciseTile(
-                        exercise: exercisesFromProvider[index],
+                      child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                              context: (context),
+                              builder: (context) {
+                                return Dialog(
+                                    child: ExercisePicker(
+                                  existingExercise:
+                                      exercisesFromProvider[index],
+                                ));
+                              });
+                        },
+                        child: ExerciseTile(
+                          exercise: exercisesFromProvider[index],
+                        ),
                       ),
                     ),
                   );
@@ -209,7 +221,7 @@ class _WorkoutBuilderState extends State<WorkoutBuilder> {
             showDialog(
                 context: (context),
                 builder: (context) {
-                  return const Dialog(child: ExercisePicker());
+                  return Dialog(child: ExercisePicker());
                 });
           }),
     );
