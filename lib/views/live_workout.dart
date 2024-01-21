@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_bro/database/data_model.dart';
+import 'package:gym_bro/database/database_provider.dart';
 import 'package:gym_bro/global/text.dart';
 
+import '../database/database_utils.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/live_workout_exercise_tile.dart';
 
@@ -117,6 +119,16 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                               ),
                               onPressed: () {
                                 _controller.reset();
+                                DatabaseUtils()
+                                    .saveCompletedWorkout(widget.workout);
+                                DatabaseProvider().addCompletedWorkoutToList(
+                                    CompletedWorkoutModel(
+                                        id: 1,
+                                        name: widget.workout.name,
+                                        exercises: widget.workout.exercises,
+                                        isFavourite: false,
+                                        completedOn:
+                                            DateTime.now().toString()));
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },

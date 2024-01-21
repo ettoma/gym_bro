@@ -42,13 +42,14 @@ class DatabaseUtils {
     }
 
     await openDatabase(
-      join(await getPathToDB(), 'workout_database12.db'),
+      join(await getPathToDB(), 'workout_database13.db'),
       onCreate: (db, version) async {
         await db.execute(
           'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN)',
         );
         await db.execute(
-            'CREATE TABLE workoutLogs(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN)');
+            'CREATE TABLE workoutLogs(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN, completedOn TEXT)');
+
         return;
       },
       version: 1,
@@ -72,6 +73,14 @@ class DatabaseUtils {
 
     for (var w in workouts) {
       Provider.of<DatabaseProvider>(context, listen: false).addWorkoutToList(w);
+    }
+
+    List<CompletedWorkoutModel> completedWorkouts =
+        await getCompletedWorkouts();
+
+    for (var w in completedWorkouts) {
+      Provider.of<DatabaseProvider>(context, listen: false)
+          .addCompletedWorkoutToList(w);
     }
   }
 
@@ -226,11 +235,59 @@ class DatabaseUtils {
       );
     }
 
-    database.rawQuery('INSERT INTO workoutLogs VALUES (?,?,?,?)', [
-      workout.id,
+    int newWorkoutId = await getCompletedWorkouts()
+        .then((value) => value[value.length - 1].id + 1);
+    // print(await getAllWorkouts().then((value) => value[value.length - 1].id));
+    print('newWorkoutId: $newWorkoutId');
+
+    database.rawQuery('INSERT INTO workoutLogs VALUES (?,?,?,?,?)', [
+      newWorkoutId,
       workout.name,
       exercisesList.toString(),
       'false',
+      DateTime.now().toUtc().toString(),
     ]);
+  }
+
+  Future<void> deleteAllCompletedWorkouts() async {
+    await initialise();
+
+    database.rawQuery('DELETE FROM workoutLogs');
+  }
+
+  Future<List<CompletedWorkoutModel>> getCompletedWorkouts() async {
+    await initialise();
+
+    final List<Map<String, dynamic>> maps =
+        await database.rawQuery('SELECT * FROM workoutLogs');
+
+    List<CompletedWorkoutModel> workoutList = [];
+    for (var w in maps) {
+      List<ExerciseModel> exercisesList = [];
+
+      jsonDecode(w['exercises']).forEach((exercise) {
+        List<WorkoutSet> setsList = [];
+        exercise['sets'].forEach((set) {
+          setsList.add(WorkoutSet(
+              reps: set['reps'], weight: set['weight'], isDone: set['isDone']));
+        });
+
+        exercisesList.add(ExerciseModel(
+          id: 0,
+          muscleGroup: exercise['muscleGroup'],
+          exercise: exercise['name'],
+          sets: setsList,
+        ));
+      });
+      workoutList.add(
+        CompletedWorkoutModel(
+            id: w['id'],
+            name: w['workoutName'],
+            exercises: exercisesList,
+            isFavourite: bool.parse(w['isFavourite']),
+            completedOn: w['completedOn']),
+      );
+    }
+    return workoutList;
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gym_bro/database/database_provider.dart';
 import 'package:gym_bro/database/database_utils.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
-import 'package:provider/provider.dart';
 
 import '../global/text.dart';
 import '../widgets/page_tile.dart';
@@ -33,6 +31,20 @@ class _HomeState extends State<Home> {
         implyLeading: false,
       ),
       floatingActionButton: FloatingActionButton(onPressed: () {
+        // DatabaseUtils().saveCompletedWorkout(WorkoutModel(
+        //     id: 23,
+        //     name: "yolo",
+        //     exercises: [
+        //       ExerciseModel(
+        //           id: 1,
+        //           muscleGroup: 'chest',
+        //           exercise: 'bench press',
+        //           sets: [WorkoutSet(reps: 10, weight: 20.0, isDone: false)])
+        //     ],
+        //     isFavourite: false));
+
+        DatabaseUtils().deleteAllCompletedWorkouts();
+        // DatabaseUtils().getCompletedWorkouts();
         // ExercisesHelper().getExercises();
         // ExerciseList().chestExercises();
 
@@ -54,9 +66,9 @@ class _HomeState extends State<Home> {
         //       isFavourite: false,
         //     ));
 
-        Provider.of<DatabaseProvider>(context, listen: false)
-            .deleteAllWorkouts();
-        DatabaseUtils().deleteAllWorkouts();
+        // Provider.of<DatabaseProvider>(context, listen: false)
+        //     .deleteAllWorkouts();
+        // DatabaseUtils().deleteAllWorkouts();
       }),
       body: Center(
         child: GridView.builder(

@@ -20,10 +20,6 @@ class MyWorkouts extends StatefulWidget {
 }
 
 class _MyWorkoutsState extends State<MyWorkouts> {
-  Future<List<WorkoutModel>> getWorkouts() async {
-    return await DatabaseUtils().getAllWorkouts();
-  }
-
   @override
   Widget build(BuildContext context) {
     Brightness brigthness = MediaQuery.of(context).platformBrightness;

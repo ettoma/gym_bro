@@ -57,6 +57,42 @@ class ExerciseModel {
   }
 }
 
+class CompletedWorkoutModel {
+  int id;
+  String name;
+  List<ExerciseModel> exercises;
+  bool isFavourite;
+  String completedOn;
+
+  CompletedWorkoutModel(
+      {required this.id,
+      required this.name,
+      required this.exercises,
+      required this.isFavourite,
+      required this.completedOn});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'exercises': exercises.map((exercise) => exercise.toMap()).toList(),
+      'isFavourite': isFavourite,
+      'completedOn': completedOn,
+    };
+  }
+
+  factory CompletedWorkoutModel.fromMap(Map<String, dynamic> map) {
+    return CompletedWorkoutModel(
+      id: map['id'],
+      name: map['workoutName'],
+      exercises: List<ExerciseModel>.from(
+          map['exercises']?.map((x) => ExerciseModel.fromMap(x))),
+      isFavourite: map['isFavourite'],
+      completedOn: map['completedOn'],
+    );
+  }
+}
+
 class WorkoutModel {
   int id;
   String name;

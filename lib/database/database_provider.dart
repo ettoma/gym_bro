@@ -3,6 +3,7 @@ import 'package:gym_bro/database/data_model.dart';
 
 class DatabaseProvider extends ChangeNotifier {
   List<WorkoutModel> workoutList = [];
+  List<CompletedWorkoutModel> completedWorkoutList = [];
 
   void addWorkoutToList(WorkoutModel workout) {
     workoutList.add(workout);
@@ -35,6 +36,11 @@ class DatabaseProvider extends ChangeNotifier {
 
   void deleteWorkout(WorkoutModel workout) {
     workoutList.remove(workout);
+    notifyListeners();
+  }
+
+  void addCompletedWorkoutToList(CompletedWorkoutModel workout) {
+    completedWorkoutList.add(workout);
     notifyListeners();
   }
 }
