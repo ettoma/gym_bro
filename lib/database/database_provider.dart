@@ -39,8 +39,13 @@ class DatabaseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteAllCompletedWorkouts() {
+    completedWorkoutList.clear();
+    notifyListeners();
+  }
+
   void addCompletedWorkoutToList(CompletedWorkoutModel workout) {
-    completedWorkoutList.add(workout);
+    completedWorkoutList.insert(0, workout);
     notifyListeners();
   }
 }

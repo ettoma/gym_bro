@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_bro/database/data_model.dart';
 import 'package:gym_bro/database/database_provider.dart';
 import 'package:gym_bro/global/text.dart';
+import 'package:provider/provider.dart';
 
 import '../database/database_utils.dart';
 import '../widgets/app_bar.dart';
@@ -27,6 +28,9 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
       initialState: CustomTimerState.reset,
       interval: CustomTimerInterval.seconds);
 
+  DateTime _initialTime = DateTime.now();
+  DateTime _endTime = DateTime.now();
+
   @override
   void dispose() {
     _controller.dispose();
@@ -36,12 +40,20 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
   @override
   void initState() {
     super.initState();
+    _initialTime = DateTime.now();
     _controller.start();
+  }
+
+  String getWorkoutDuration() {
+    _endTime = DateTime.now();
+
+    Duration duration = _endTime.difference(_initialTime);
+
+    return duration.inSeconds.toString();
   }
 
   @override
   Widget build(BuildContext context) {
-    Brightness brigthness = MediaQuery.of(context).platformBrightness;
     Size deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -119,16 +131,20 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                               ),
                               onPressed: () {
                                 _controller.reset();
-                                DatabaseUtils()
-                                    .saveCompletedWorkout(widget.workout);
-                                DatabaseProvider().addCompletedWorkoutToList(
-                                    CompletedWorkoutModel(
-                                        id: 1,
-                                        name: widget.workout.name,
-                                        exercises: widget.workout.exercises,
-                                        isFavourite: false,
-                                        completedOn:
-                                            DateTime.now().toString()));
+                                DatabaseUtils().saveCompletedWorkout(
+                                    widget.workout, getWorkoutDuration());
+                                Provider.of<DatabaseProvider>(context,
+                                        listen: false)
+                                    .addCompletedWorkoutToList(
+                                        CompletedWorkoutModel(
+                                            id: 1,
+                                            name: widget.workout.name,
+                                            exercises: widget.workout.exercises,
+                                            isFavourite: false,
+                                            completedOn: DateTime.now()
+                                                .toUtc()
+                                                .toString(),
+                                            duration: getWorkoutDuration()));
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },

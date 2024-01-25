@@ -63,13 +63,15 @@ class CompletedWorkoutModel {
   List<ExerciseModel> exercises;
   bool isFavourite;
   String completedOn;
+  String duration;
 
   CompletedWorkoutModel(
       {required this.id,
       required this.name,
       required this.exercises,
       required this.isFavourite,
-      required this.completedOn});
+      required this.completedOn,
+      required this.duration});
 
   Map<String, dynamic> toMap() {
     return {
@@ -83,13 +85,13 @@ class CompletedWorkoutModel {
 
   factory CompletedWorkoutModel.fromMap(Map<String, dynamic> map) {
     return CompletedWorkoutModel(
-      id: map['id'],
-      name: map['workoutName'],
-      exercises: List<ExerciseModel>.from(
-          map['exercises']?.map((x) => ExerciseModel.fromMap(x))),
-      isFavourite: map['isFavourite'],
-      completedOn: map['completedOn'],
-    );
+        id: map['id'],
+        name: map['workoutName'],
+        exercises: List<ExerciseModel>.from(
+            map['exercises']?.map((x) => ExerciseModel.fromMap(x))),
+        isFavourite: map['isFavourite'],
+        completedOn: map['completedOn'],
+        duration: map['duration']);
   }
 }
 

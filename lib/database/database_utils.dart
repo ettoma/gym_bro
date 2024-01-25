@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -42,13 +41,13 @@ class DatabaseUtils {
     }
 
     await openDatabase(
-      join(await getPathToDB(), 'workout_database13.db'),
+      join(await getPathToDB(), 'workout_database14.db'),
       onCreate: (db, version) async {
         await db.execute(
           'CREATE TABLE workouts(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN)',
         );
         await db.execute(
-            'CREATE TABLE workoutLogs(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN, completedOn TEXT)');
+            'CREATE TABLE workoutLogs(id INTEGER PRIMARY KEY, workoutName TEXT, exercises TEXT, isFavourite BOOLEAN, completedOn TEXT, duration TEXT)');
 
         return;
       },
@@ -224,7 +223,8 @@ class DatabaseUtils {
     database.rawQuery('DELETE FROM workouts WHERE id = ?', [workout.id]);
   }
 
-  Future<void> saveCompletedWorkout(WorkoutModel workout) async {
+  Future<void> saveCompletedWorkout(
+      WorkoutModel workout, String duration) async {
     await initialise();
 
     List<String> exercisesList = [];
@@ -236,16 +236,15 @@ class DatabaseUtils {
     }
 
     int newWorkoutId = await getCompletedWorkouts()
-        .then((value) => value[value.length - 1].id + 1);
-    // print(await getAllWorkouts().then((value) => value[value.length - 1].id));
-    print('newWorkoutId: $newWorkoutId');
+        .then((value) => value.isEmpty ? 1 : value[value.length - 1].id + 1);
 
-    database.rawQuery('INSERT INTO workoutLogs VALUES (?,?,?,?,?)', [
+    database.rawQuery('INSERT INTO workoutLogs VALUES (?,?,?,?,?,?)', [
       newWorkoutId,
       workout.name,
       exercisesList.toString(),
       'false',
       DateTime.now().toUtc().toString(),
+      duration,
     ]);
   }
 
@@ -285,9 +284,11 @@ class DatabaseUtils {
             name: w['workoutName'],
             exercises: exercisesList,
             isFavourite: bool.parse(w['isFavourite']),
-            completedOn: w['completedOn']),
+            completedOn: w['completedOn'],
+            duration: w['duration']),
       );
     }
+    print(maps);
     return workoutList;
   }
 }

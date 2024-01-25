@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gym_bro/database/database_utils.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
+import 'package:provider/provider.dart';
 
+import '../database/database_provider.dart';
 import '../global/text.dart';
 import '../widgets/page_tile.dart';
 
@@ -43,6 +45,8 @@ class _HomeState extends State<Home> {
         //     ],
         //     isFavourite: false));
 
+        Provider.of<DatabaseProvider>(context, listen: false)
+            .deleteAllCompletedWorkouts();
         DatabaseUtils().deleteAllCompletedWorkouts();
         // DatabaseUtils().getCompletedWorkouts();
         // ExercisesHelper().getExercises();
