@@ -4,6 +4,7 @@ import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_bro/database/data_model.dart';
 import 'package:gym_bro/database/database_provider.dart';
+import 'package:gym_bro/global/live_workout_provider.dart';
 import 'package:gym_bro/global/text.dart';
 import 'package:provider/provider.dart';
 
@@ -46,9 +47,7 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
 
   String getWorkoutDuration() {
     _endTime = DateTime.now();
-
     Duration duration = _endTime.difference(_initialTime);
-
     return duration.inSeconds.toString();
   }
 
@@ -131,6 +130,9 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                               ),
                               onPressed: () {
                                 _controller.reset();
+                                Provider.of<LiveWorkoutProvider>(context,
+                                        listen: false)
+                                    .clearWorkout();
                                 DatabaseUtils().saveCompletedWorkout(
                                     widget.workout, getWorkoutDuration());
                                 Provider.of<DatabaseProvider>(context,
@@ -157,18 +159,20 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
             ],
           ),
         ),
-        Expanded(
-            child: ListView.builder(
-                clipBehavior: Clip.antiAlias,
-                itemCount: widget.workout.exercises.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: LiveWorkoutExerciseTile(
-                        exercise: widget.workout.exercises[index],
-                        exerciseIndex: index,
-                      ));
-                })),
+        Expanded(child: Consumer<LiveWorkoutProvider>(
+            builder: (context, workoutProvider, _) {
+          return ListView.builder(
+              clipBehavior: Clip.antiAlias,
+              itemCount: workoutProvider.workout!.exercises.length,
+              itemBuilder: (context, index) {
+                return Container(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: LiveWorkoutExerciseTile(
+                      exercise: workoutProvider.workout!.exercises[index],
+                      exerciseIndex: index,
+                    ));
+              });
+        })),
         SizedBox(
           height: 80,
           child: ClipRect(
@@ -182,6 +186,15 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
           ),
         )
       ]),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Provider.of<LiveWorkoutProvider>(context, listen: false)
+            .addExerciseToWorkout(ExerciseModel(
+          id: 1,
+          muscleGroup: 'chest',
+          exercise: 'bench press',
+          sets: [WorkoutSet(reps: 10, weight: 20.0, isDone: false)],
+        ));
+      }),
     );
   }
 }

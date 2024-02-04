@@ -29,6 +29,15 @@ class DatabaseProvider extends ChangeNotifier {
     return null;
   }
 
+  CompletedWorkoutModel? getCompletedWorkoutById(int workoutId) {
+    for (var w in completedWorkoutList) {
+      if (w.id == workoutId) {
+        return w;
+      }
+    }
+    return null;
+  }
+
   void deleteAllWorkouts() {
     workoutList.clear();
     notifyListeners();

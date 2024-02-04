@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:gym_bro/global/exercise_picker_provider.dart';
-import 'package:gym_bro/global/live_workout_provider.dart';
-import 'package:gym_bro/views/workout_builder.dart';
 import 'package:provider/provider.dart';
 
 import '../database/data_model.dart';
 import '../database/database_provider.dart';
-import '../global/quick_workout_exercise_picker_provider.dart' as qwep;
 import '../global/text.dart';
 import '../views/live_workout.dart';
 
-class WorkoutDialog extends StatelessWidget {
+class CompletedWorkoutDialog extends StatelessWidget {
   final Size deviceSize;
-  final WorkoutModel workout;
+  final CompletedWorkoutModel workout;
 
-  const WorkoutDialog(
+  const CompletedWorkoutDialog(
       {super.key, required this.deviceSize, required this.workout});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<DatabaseProvider>(builder: (context, databaseProvider, _) {
-      WorkoutModel w = databaseProvider.getWorkoutById(workout.id) ?? workout;
+      CompletedWorkoutModel w =
+          databaseProvider.getCompletedWorkoutById(workout.id) ?? workout;
       return Dialog(
         child: SizedBox(
           width: deviceSize.width * 0.8,
@@ -106,40 +103,19 @@ class WorkoutDialog extends StatelessWidget {
                     style: TextStyle(color: Colors.tealAccent),
                   ),
                   onPressed: () {
-                    Provider.of<LiveWorkoutProvider>(context, listen: false)
-                        .setWorkout(workout);
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                          builder: (context) => LiveWorkout(workout: workout)),
+                        builder: (context) => LiveWorkout(
+                          workout: WorkoutModel(
+                              id: w.id,
+                              name: w.name,
+                              exercises: w.exercises,
+                              isFavourite: w.isFavourite),
+                        ),
+                      ),
                     );
                   },
                 ),
-                TextButton(
-                  child: const Text(Buttons.edit),
-                  onPressed: () {
-                    for (var exercise in w.exercises) {
-                      Provider.of<ExercisePickerProvider>(context,
-                              listen: false)
-                          .setExercise(qwep.Exercise(
-                              name: exercise.exercise,
-                              muscleGroup: exercise.muscleGroup,
-                              isExerciseDone: false,
-                              sets: [
-                            for (int i = 0; i < exercise.sets.length; i++)
-                              qwep.WorkoutSet(
-                                  reps: exercise.sets[i].reps,
-                                  weight: exercise.sets[i].weight,
-                                  isDone: false)
-                          ]));
-                    }
-
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => WorkoutBuilder(
-                              existingWorkoutTitle: w.name,
-                              existingWorkoutId: w.id,
-                            )));
-                  },
-                )
               ],
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gym_bro/database/data_model.dart';
 import 'package:gym_bro/database/database_provider.dart';
 import 'package:gym_bro/database/database_utils.dart';
+import 'package:gym_bro/global/live_workout_provider.dart';
 import 'package:gym_bro/global/text.dart';
 import 'package:gym_bro/views/live_workout.dart';
 import 'package:gym_bro/widgets/app_bar.dart';
@@ -57,6 +57,11 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                                             }),
                                         IconButton(
                                           onPressed: () {
+                                            Provider.of<LiveWorkoutProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .setWorkout(databaseProvider
+                                                    .workoutList[index]);
                                             Navigator.of(context)
                                                 .pushReplacement(
                                                     MaterialPageRoute(
