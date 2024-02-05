@@ -6,6 +6,8 @@ import 'package:gym_bro/database/data_model.dart';
 import 'package:gym_bro/database/database_provider.dart';
 import 'package:gym_bro/global/live_workout_provider.dart';
 import 'package:gym_bro/global/text.dart';
+import 'package:gym_bro/views/home.dart';
+import 'package:gym_bro/widgets/live_workout_exercise_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../database/database_utils.dart';
@@ -33,16 +35,16 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
   DateTime _endTime = DateTime.now();
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     _initialTime = DateTime.now();
     _controller.start();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   String getWorkoutDuration() {
@@ -147,8 +149,10 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                                                 .toUtc()
                                                 .toString(),
                                             duration: getWorkoutDuration()));
-                                Navigator.pop(context);
-                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Home()));
                               },
                             ),
                           ],
@@ -161,6 +165,8 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
         ),
         Expanded(child: Consumer<LiveWorkoutProvider>(
             builder: (context, workoutProvider, _) {
+          Provider.of<LiveWorkoutProvider>(context, listen: false)
+              .setWorkout(widget.workout);
           return ListView.builder(
               clipBehavior: Clip.antiAlias,
               itemCount: workoutProvider.workout!.exercises.length,
@@ -187,13 +193,11 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
         )
       ]),
       floatingActionButton: FloatingActionButton(onPressed: () {
-        Provider.of<LiveWorkoutProvider>(context, listen: false)
-            .addExerciseToWorkout(ExerciseModel(
-          id: 1,
-          muscleGroup: 'chest',
-          exercise: 'bench press',
-          sets: [WorkoutSet(reps: 10, weight: 20.0, isDone: false)],
-        ));
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(child: LiveWorkoutExercisePicker());
+            });
       }),
     );
   }
