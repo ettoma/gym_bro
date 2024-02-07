@@ -62,6 +62,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                                                     listen: false)
                                                 .setWorkout(databaseProvider
                                                     .workoutList[index]);
+
                                             Navigator.of(context)
                                                 .pushReplacement(
                                                     MaterialPageRoute(

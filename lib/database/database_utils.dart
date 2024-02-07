@@ -288,7 +288,6 @@ class DatabaseUtils {
             duration: w['duration']),
       );
     }
-    print(maps);
     return workoutList;
   }
 }

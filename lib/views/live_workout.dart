@@ -149,10 +149,8 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                                                 .toUtc()
                                                 .toString(),
                                             duration: getWorkoutDuration()));
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Home()));
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                               },
                             ),
                           ],
@@ -165,8 +163,6 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
         ),
         Expanded(child: Consumer<LiveWorkoutProvider>(
             builder: (context, workoutProvider, _) {
-          Provider.of<LiveWorkoutProvider>(context, listen: false)
-              .setWorkout(widget.workout);
           return ListView.builder(
               clipBehavior: Clip.antiAlias,
               itemCount: workoutProvider.workout!.exercises.length,

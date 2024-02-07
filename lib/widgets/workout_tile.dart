@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import '../database/data_model.dart';
 import '../global/colours.dart';
 
-class WorkoutTile extends StatelessWidget {
+class WorkoutTile extends StatefulWidget {
   WorkoutModel workout;
   WorkoutTile({super.key, required this.workout});
 
+  @override
+  State<WorkoutTile> createState() => _WorkoutTileState();
+}
+
+class _WorkoutTileState extends State<WorkoutTile> {
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
@@ -45,7 +50,7 @@ class WorkoutTile extends StatelessWidget {
                     width: 3,
                   ),
                   borderRadius: BorderRadius.circular(10)),
-              child: Text(workout.name,
+              child: Text(widget.workout.name,
                   style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 18))),
           Container(
@@ -53,7 +58,7 @@ class WorkoutTile extends StatelessWidget {
             height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: workout.exercises.length,
+              itemCount: widget.workout.exercises.length,
               itemBuilder: (context, index) {
                 return Container(
                   alignment: Alignment.center,
@@ -69,7 +74,7 @@ class WorkoutTile extends StatelessWidget {
                   child: Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 10),
-                      child: Text(workout.exercises[index].exercise,
+                      child: Text(widget.workout.exercises[index].exercise,
                           style: const TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 16))),
                 );

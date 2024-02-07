@@ -6,7 +6,6 @@ import 'package:gym_bro/widgets/logs_workout_tile.dart';
 import 'package:provider/provider.dart';
 
 import '../database/database_provider.dart';
-import '../widgets/workout_dialog.dart';
 
 class LogsPage extends StatefulWidget {
   const LogsPage({super.key});
