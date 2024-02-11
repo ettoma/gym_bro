@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Gym Bro',
       darkTheme: ThemeProvider().darkMode,
-      theme: ThemeProvider().lightMode,
+      theme: ThemeProvider().darkMode, //! fix light mode eventually
       home: const Home(),
     );
   }

@@ -286,8 +286,9 @@ class _ExercisePickerState extends State<ExercisePicker> {
                                               enableSuggestions: false,
                                               controller:
                                                   weightControllers[index],
-                                              keyboardType:
-                                                  TextInputType.number,
+                                              keyboardType: const TextInputType
+                                                  .numberWithOptions(
+                                                  decimal: true),
                                               decoration: const InputDecoration(
                                                 counterText: '',
                                                 helperStyle: TextStyle(
@@ -364,9 +365,9 @@ class _ExercisePickerState extends State<ExercisePicker> {
                               WorkoutSet(
                                   reps: int.tryParse(repsControllers[i].text) ??
                                       0,
-                                  weight: double.tryParse(
-                                          weightControllers[i].text) ??
-                                      0,
+                                  weight: double.parse(weightControllers[i]
+                                      .text
+                                      .replaceAll(",", ".")),
                                   isDone: false)
                           ]),
                     );
@@ -382,9 +383,9 @@ class _ExercisePickerState extends State<ExercisePicker> {
                             WorkoutSet(
                                 reps:
                                     int.tryParse(repsControllers[i].text) ?? 0,
-                                weight: double.tryParse(
-                                        weightControllers[i].text) ??
-                                    0,
+                                weight: double.parse(weightControllers[i]
+                                    .text
+                                    .replaceAll(",", ".")),
                                 isDone: false)
                         ]));
                     Navigator.pop(context);
