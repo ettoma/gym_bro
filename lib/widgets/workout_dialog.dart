@@ -110,7 +110,10 @@ class WorkoutDialog extends StatelessWidget {
                         .setWorkout(workout);
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                          builder: (context) => LiveWorkout(workout: workout)),
+                          builder: (context) => LiveWorkout(
+                              workout: workout,
+                              workoutExerciseListLength:
+                                  workout.exercises.length)),
                     );
                   },
                 ),

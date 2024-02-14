@@ -111,6 +111,7 @@ class CompletedWorkoutDialog extends StatelessWidget {
                               name: w.name,
                               exercises: w.exercises,
                               isFavourite: w.isFavourite),
+                          workoutExerciseListLength: w.exercises.length,
                         ),
                       ),
                     );

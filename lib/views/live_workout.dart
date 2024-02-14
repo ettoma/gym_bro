@@ -16,7 +16,11 @@ import '../widgets/live_workout_exercise_tile.dart';
 
 class LiveWorkout extends StatefulWidget {
   WorkoutModel workout;
-  LiveWorkout({super.key, required this.workout});
+  int workoutExerciseListLength;
+  LiveWorkout(
+      {super.key,
+      required this.workout,
+      required this.workoutExerciseListLength});
 
   @override
   State<LiveWorkout> createState() => _LiveWorkoutPageState();
@@ -134,7 +138,8 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                                 _controller.reset();
                                 Provider.of<LiveWorkoutProvider>(context,
                                         listen: false)
-                                    .clearWorkout();
+                                    .clearWorkout(
+                                        widget.workoutExerciseListLength);
                                 DatabaseUtils().saveCompletedWorkout(
                                     widget.workout, getWorkoutDuration());
                                 Provider.of<DatabaseProvider>(context,

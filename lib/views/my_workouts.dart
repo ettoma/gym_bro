@@ -66,13 +66,18 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                                             Navigator.of(context)
                                                 .pushReplacement(
                                                     MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            LiveWorkout(
-                                                              workout:
-                                                                  databaseProvider
+                                                        builder:
+                                                            (context) =>
+                                                                LiveWorkout(
+                                                                  workout: databaseProvider
                                                                           .workoutList[
                                                                       index],
-                                                            )));
+                                                                  workoutExerciseListLength: databaseProvider
+                                                                      .workoutList[
+                                                                          index]
+                                                                      .exercises
+                                                                      .length,
+                                                                )));
                                           },
                                           icon: const Icon(
                                             Icons.check,
