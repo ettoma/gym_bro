@@ -6,7 +6,7 @@ class LiveWorkoutProvider extends ChangeNotifier {
   WorkoutModel? workout;
 
   void setWorkout(WorkoutModel w) {
-    workout = w;
+    workout = w.copyWith();
     notifyListeners();
   }
 
@@ -32,8 +32,8 @@ class LiveWorkoutProvider extends ChangeNotifier {
     }
     // Check if the original workout was different from the completed workout, and restore
     // the original workout if it was different.
-    workout!.exercises
-        .removeRange(originalWorkoutLength, workout!.exercises.length);
-    notifyListeners();
+    // workout!.exercises
+    //     .removeRange(originalWorkoutLength, workout!.exercises.length);
+    // notifyListeners();
   }
 }

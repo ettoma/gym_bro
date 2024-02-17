@@ -136,10 +136,6 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                               ),
                               onPressed: () {
                                 _controller.reset();
-                                Provider.of<LiveWorkoutProvider>(context,
-                                        listen: false)
-                                    .clearWorkout(
-                                        widget.workoutExerciseListLength);
                                 DatabaseUtils().saveCompletedWorkout(
                                     widget.workout, getWorkoutDuration());
                                 Provider.of<DatabaseProvider>(context,
@@ -154,6 +150,10 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                                                 .toUtc()
                                                 .toString(),
                                             duration: getWorkoutDuration()));
+                                Provider.of<LiveWorkoutProvider>(context,
+                                        listen: false)
+                                    .clearWorkout(
+                                        widget.workoutExerciseListLength);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               },

@@ -125,6 +125,19 @@ class WorkoutModel {
       isFavourite: map['isFavourite'],
     );
   }
+
+  WorkoutModel copyWith(
+      {int? id,
+      String? name,
+      List<ExerciseModel>? exercises,
+      bool? isFavourite}) {
+    return WorkoutModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      exercises: exercises ?? this.exercises,
+      isFavourite: isFavourite ?? this.isFavourite,
+    );
+  }
 }
 
 class WorkoutSet {
