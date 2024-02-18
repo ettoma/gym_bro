@@ -24,71 +24,81 @@ class _LogsPageState extends State<LogsPage> {
         appBar: NavBar(
           pageTitle: PageNames.logs,
         ),
-        body:
-            Consumer<DatabaseProvider>(builder: (context, databaseProvider, _) {
-          return ListView.builder(
-              itemCount: databaseProvider.completedWorkoutList.length,
-              itemBuilder: (context, index) {
-                bool isSameDate = true;
-                final String dateString =
-                    databaseProvider.completedWorkoutList[index].completedOn;
-                final DateTime date = DateTime.parse(dateString);
-                if (index == 0) {
-                  isSameDate = true;
-                } else {
-                  final String prevDateString = databaseProvider
-                      .completedWorkoutList[index - 1].completedOn;
-                  final DateTime prevDate = DateTime.parse(prevDateString);
-
-                  if (prevDate.month == date.month) {
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Consumer<DatabaseProvider>(
+              builder: (context, databaseProvider, _) {
+            return ListView.builder(
+                itemCount: databaseProvider.completedWorkoutList.length,
+                itemBuilder: (context, index) {
+                  bool isSameDate = true;
+                  final String dateString =
+                      databaseProvider.completedWorkoutList[index].completedOn;
+                  final DateTime date = DateTime.parse(dateString);
+                  if (index == 0) {
                     isSameDate = true;
                   } else {
-                    isSameDate = false;
+                    final String prevDateString = databaseProvider
+                        .completedWorkoutList[index - 1].completedOn;
+                    final DateTime prevDate = DateTime.parse(prevDateString);
+
+                    if (prevDate.month == date.month) {
+                      isSameDate = true;
+                    } else {
+                      isSameDate = false;
+                    }
                   }
-                }
-                if (index == 0 || !(isSameDate)) {
-                  return Column(
-                    children: [
-                      Text(
-                        DateFormat('MMMM').format(date),
-                      ),
-                      GestureDetector(
-                        onLongPress: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return CompletedWorkoutDialog(
-                                  deviceSize: deviceSize,
-                                  workout: databaseProvider
-                                      .completedWorkoutList[index],
-                                );
-                              });
-                        },
-                        child: LogsWorkoutTile(
-                          workout: databaseProvider.completedWorkoutList[index],
+                  if (index == 0 || !(isSameDate)) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            DateFormat('MMMM').format(date),
+                            style: const TextStyle(
+                                color: Colors.amberAccent,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
+                        GestureDetector(
+                          onLongPress: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CompletedWorkoutDialog(
+                                    deviceSize: deviceSize,
+                                    workout: databaseProvider
+                                        .completedWorkoutList[index],
+                                  );
+                                });
+                          },
+                          child: LogsWorkoutTile(
+                            workout:
+                                databaseProvider.completedWorkoutList[index],
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return GestureDetector(
+                      onLongPress: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CompletedWorkoutDialog(
+                                deviceSize: deviceSize,
+                                workout: databaseProvider
+                                    .completedWorkoutList[index],
+                              );
+                            });
+                      },
+                      child: LogsWorkoutTile(
+                        workout: databaseProvider.completedWorkoutList[index],
                       ),
-                    ],
-                  );
-                } else {
-                  return GestureDetector(
-                    onLongPress: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return CompletedWorkoutDialog(
-                              deviceSize: deviceSize,
-                              workout:
-                                  databaseProvider.completedWorkoutList[index],
-                            );
-                          });
-                    },
-                    child: LogsWorkoutTile(
-                      workout: databaseProvider.completedWorkoutList[index],
-                    ),
-                  );
-                }
-              });
-        }));
+                    );
+                  }
+                });
+          }),
+        ));
   }
 }

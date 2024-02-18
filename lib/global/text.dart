@@ -27,6 +27,7 @@ class Titles {
   static const String startWorkout = 'start this workout?';
   static const String editSet = 'edit set';
   static const String deleteWorkout = 'delete this workout?';
+  static const String deleteExercise = 'delete this exercise?';
 }
 
 class Buttons {

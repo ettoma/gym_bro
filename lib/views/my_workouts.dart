@@ -28,131 +28,138 @@ class _MyWorkoutsState extends State<MyWorkouts> {
       appBar: NavBar(
         pageTitle: PageNames.myWorkouts,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Consumer<DatabaseProvider>(
-              builder: (context, databaseProvider, _) {
-                return Expanded(
-                    child: ListView.builder(
-                        itemCount: databaseProvider.workoutList.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: const Text(Titles.startWorkout),
-                                      contentPadding: const EdgeInsets.all(20),
-                                      titleTextStyle:
-                                          const TextStyle(fontSize: 18),
-                                      actions: [
-                                        IconButton(
-                                            icon: const Icon(Icons.clear),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            }),
-                                        IconButton(
-                                          onPressed: () {
-                                            Provider.of<LiveWorkoutProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .setWorkout(databaseProvider
-                                                    .workoutList[index]);
-
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                                        builder:
-                                                            (context) =>
-                                                                LiveWorkout(
-                                                                  workout: databaseProvider
-                                                                          .workoutList[
-                                                                      index],
-                                                                  workoutExerciseListLength: databaseProvider
-                                                                      .workoutList[
-                                                                          index]
-                                                                      .exercises
-                                                                      .length,
-                                                                )));
-                                          },
-                                          icon: const Icon(
-                                            Icons.check,
-                                            color: Colors.tealAccent,
-                                          ),
-                                        )
-                                      ],
-                                    );
-                                  });
-                            },
-                            onLongPress: () {
-                              showDialog(
-                                  barrierDismissible: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return WorkoutDialog(
-                                      deviceSize: deviceSize,
-                                      workout:
-                                          databaseProvider.workoutList[index],
-                                    );
-                                  });
-                            },
-                            child: Dismissible(
-                              key: UniqueKey(),
-                              dismissThresholds:
-                                  Map.from({DismissDirection.endToStart: 0.3}),
-                              direction: DismissDirection.endToStart,
-                              confirmDismiss: (direction) async {
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Consumer<DatabaseProvider>(
+                builder: (context, databaseProvider, _) {
+                  return Expanded(
+                      child: ListView.builder(
+                          itemCount: databaseProvider.workoutList.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
+                                        title: const Text(Titles.startWorkout),
+                                        contentPadding:
+                                            const EdgeInsets.all(20),
                                         titleTextStyle:
                                             const TextStyle(fontSize: 18),
-                                        title: const Text(Titles.deleteWorkout),
                                         actions: [
                                           IconButton(
-                                              icon: const Icon(
-                                                Icons.clear,
-                                                color: Colors.redAccent,
-                                              ),
+                                              icon: const Icon(Icons.clear),
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                               }),
                                           IconButton(
-                                            onPressed: () async {
-                                              await DatabaseUtils()
-                                                  .deleteWorkout(
-                                                      databaseProvider
-                                                          .workoutList[index]);
-
-                                              databaseProvider.deleteWorkout(
-                                                  databaseProvider
+                                            onPressed: () {
+                                              Provider.of<LiveWorkoutProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .setWorkout(databaseProvider
                                                       .workoutList[index]);
 
-                                              Navigator.of(context).pop();
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                          builder:
+                                                              (context) =>
+                                                                  LiveWorkout(
+                                                                    workout: databaseProvider
+                                                                            .workoutList[
+                                                                        index],
+                                                                    workoutExerciseListLength: databaseProvider
+                                                                        .workoutList[
+                                                                            index]
+                                                                        .exercises
+                                                                        .length,
+                                                                  )));
                                             },
                                             icon: const Icon(
                                               Icons.check,
+                                              color: Colors.tealAccent,
                                             ),
                                           )
                                         ],
                                       );
                                     });
-                                return;
                               },
-                              background: stackBehindDismiss(),
-                              child: WorkoutTile(
-                                  workout: databaseProvider.workoutList[index]),
-                            ),
-                          );
-                        }));
-              },
-            )
-          ],
+                              onLongPress: () {
+                                showDialog(
+                                    barrierDismissible: true,
+                                    context: context,
+                                    builder: (context) {
+                                      return WorkoutDialog(
+                                        deviceSize: deviceSize,
+                                        workout:
+                                            databaseProvider.workoutList[index],
+                                      );
+                                    });
+                              },
+                              child: Dismissible(
+                                key: UniqueKey(),
+                                dismissThresholds: Map.from(
+                                    {DismissDirection.endToStart: 0.3}),
+                                direction: DismissDirection.endToStart,
+                                confirmDismiss: (direction) async {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          titleTextStyle:
+                                              const TextStyle(fontSize: 18),
+                                          title:
+                                              const Text(Titles.deleteWorkout),
+                                          actions: [
+                                            IconButton(
+                                                icon: const Icon(
+                                                  Icons.clear,
+                                                  color: Colors.redAccent,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                }),
+                                            IconButton(
+                                              onPressed: () async {
+                                                await DatabaseUtils()
+                                                    .deleteWorkout(
+                                                        databaseProvider
+                                                                .workoutList[
+                                                            index]);
+
+                                                databaseProvider.deleteWorkout(
+                                                    databaseProvider
+                                                        .workoutList[index]);
+
+                                                Navigator.of(context).pop();
+                                              },
+                                              icon: const Icon(
+                                                Icons.check,
+                                              ),
+                                            )
+                                          ],
+                                        );
+                                      });
+                                  return;
+                                },
+                                background: stackBehindDismiss(),
+                                child: WorkoutTile(
+                                    workout:
+                                        databaseProvider.workoutList[index]),
+                              ),
+                            );
+                          }));
+                },
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

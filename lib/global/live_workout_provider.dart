@@ -24,6 +24,13 @@ class LiveWorkoutProvider extends ChangeNotifier {
     }
   }
 
+  void deleteExercise(int exerciseIndex) {
+    if (workout != null) {
+      workout!.exercises.removeAt(exerciseIndex);
+      notifyListeners();
+    }
+  }
+
   void clearWorkout(int originalWorkoutLength) {
     for (var e in workout!.exercises) {
       for (var s in e.sets) {

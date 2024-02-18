@@ -18,6 +18,11 @@ class QuickWorkoutExercisePickerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteExercise(int exerciseIndex) {
+    exercises.removeAt(exerciseIndex);
+    notifyListeners();
+  }
+
   get getExercises => exercises;
 }
 

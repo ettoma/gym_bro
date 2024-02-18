@@ -58,6 +58,23 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
       }
     }
 
+    Color getSetColor(setIndex) {
+      switch (brigthness) {
+        case Brightness.dark:
+          if (setsState[setIndex].isDone) {
+            return Colors.white;
+          }
+          return Colors.white38;
+        case Brightness.light:
+          if (widget.exercise.sets[setIndex].isDone) {
+            return Colors.indigoAccent;
+          }
+          return ColorPalette.lightBox;
+        default:
+          return ColorPalette.lightBox;
+      }
+    }
+
     Color getTitleBorderColor() {
       int countOfTotalSets = setsState.length;
       int countOfCompletedSets = 0;
@@ -113,6 +130,15 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  Provider.of<LiveWorkoutProvider>(context, listen: false)
+                      .addSetToExercise(
+                          WorkoutSet(reps: 0, weight: 0, isDone: false),
+                          widget.exerciseIndex);
+                },
+              ),
               Container(
                 alignment: Alignment.center,
                 width: deviceSize.width,
@@ -256,16 +282,23 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
                                                     color: Colors.tealAccent,
                                                   ),
                                                   onPressed: () {
-                                                    widget.exercise.sets[index]
-                                                            .reps =
-                                                        int.parse(repsController
-                                                            .text);
-                                                    widget.exercise.sets[index]
-                                                            .weight =
-                                                        double.parse(
-                                                            weightController
-                                                                .text);
-                                                    setState(() {});
+                                                    setState(() {
+                                                      widget
+                                                              .exercise
+                                                              .sets[index]
+                                                              .reps =
+                                                          int.parse(
+                                                              repsController
+                                                                  .text);
+                                                      widget
+                                                              .exercise
+                                                              .sets[index]
+                                                              .weight =
+                                                          double.parse(
+                                                              weightController
+                                                                  .text);
+                                                    });
+
                                                     Navigator.of(context).pop();
                                                   },
                                                 )
@@ -307,7 +340,10 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
                                         const EdgeInsets.symmetric(vertical: 5),
                                     child: Text(
                                       '${exerciseProvider.workout!.exercises[widget.exerciseIndex].sets[index].weight}$measureUnit',
-                                      style: const TextStyle(fontSize: 18),
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: getSetColor(index)),
                                       overflow: TextOverflow.fade,
                                       softWrap: false,
                                     )),
@@ -316,8 +352,9 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
                                         vertical: 5, horizontal: 10),
                                     child: Text(
                                         '${exerciseProvider.workout!.exercises[widget.exerciseIndex].sets[index].reps.toString()} x',
-                                        style: const TextStyle(
-                                            // fontWeight: FontWeight.bold,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: getSetColor(index),
                                             fontSize: 18))),
                               ],
                             ),
@@ -329,14 +366,6 @@ class _LiveWorkoutExerciseTileState extends State<LiveWorkoutExerciseTile> {
             ],
           ),
         ),
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            Provider.of<LiveWorkoutProvider>(context, listen: false)
-                .addSetToExercise(WorkoutSet(reps: 0, weight: 0, isDone: false),
-                    widget.exerciseIndex);
-          },
-        )
       ],
     );
   }

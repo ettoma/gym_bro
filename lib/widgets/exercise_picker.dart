@@ -158,6 +158,72 @@ class _ExercisePickerState extends State<ExercisePicker> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
             ),
+            IconButton(
+              icon: const Icon(
+                Icons.check_rounded,
+                color: Colors.tealAccent,
+              ),
+              onPressed: () {
+                if (exerciseController.text == '' ||
+                    muscleGroupController.text == '' ||
+                    repsControllers[0].text == '' ||
+                    weightControllers[0].text == '') {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          title: Text('error',
+                              style: TextStyle(color: Colors.amberAccent)),
+                          content: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              'please fill in all fields',
+                            ),
+                          ),
+                        );
+                      });
+                  return;
+                } else {
+                  if (widget.existingExercise != null) {
+                    Provider.of<ExercisePickerProvider>(context, listen: false)
+                        .updateExercise(
+                      Exercise(
+                          name: exerciseController.text,
+                          muscleGroup: muscleGroupController.text,
+                          isExerciseDone: false,
+                          sets: [
+                            for (int i = 0; i < setsCount; i++)
+                              WorkoutSet(
+                                  reps: int.tryParse(repsControllers[i].text) ??
+                                      0,
+                                  weight: double.parse(weightControllers[i]
+                                      .text
+                                      .replaceAll(",", ".")),
+                                  isDone: false)
+                          ]),
+                    );
+                    Navigator.pop(context);
+                  } else {
+                    Provider.of<ExercisePickerProvider>(context, listen: false)
+                        .setExercise(Exercise(
+                            name: exerciseController.text,
+                            muscleGroup: muscleGroupController.text,
+                            isExerciseDone: false,
+                            sets: [
+                          for (int i = 0; i < setsCount; i++)
+                            WorkoutSet(
+                                reps:
+                                    int.tryParse(repsControllers[i].text) ?? 0,
+                                weight: double.parse(weightControllers[i]
+                                    .text
+                                    .replaceAll(",", ".")),
+                                isDone: false)
+                        ]));
+                    Navigator.pop(context);
+                  }
+                }
+              },
+            ),
             LayoutBuilder(
               builder: (context, constraints) {
                 return SizedBox(
@@ -325,72 +391,6 @@ class _ExercisePickerState extends State<ExercisePicker> {
                     ],
                   ),
                 );
-              },
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.check_rounded,
-                color: Colors.tealAccent,
-              ),
-              onPressed: () {
-                if (exerciseController.text == '' ||
-                    muscleGroupController.text == '' ||
-                    repsControllers[0].text == '' ||
-                    weightControllers[0].text == '') {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const AlertDialog(
-                          title: Text('error',
-                              style: TextStyle(color: Colors.amberAccent)),
-                          content: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                              'please fill in all fields',
-                            ),
-                          ),
-                        );
-                      });
-                  return;
-                } else {
-                  if (widget.existingExercise != null) {
-                    Provider.of<ExercisePickerProvider>(context, listen: false)
-                        .updateExercise(
-                      Exercise(
-                          name: exerciseController.text,
-                          muscleGroup: muscleGroupController.text,
-                          isExerciseDone: false,
-                          sets: [
-                            for (int i = 0; i < setsCount; i++)
-                              WorkoutSet(
-                                  reps: int.tryParse(repsControllers[i].text) ??
-                                      0,
-                                  weight: double.parse(weightControllers[i]
-                                      .text
-                                      .replaceAll(",", ".")),
-                                  isDone: false)
-                          ]),
-                    );
-                    Navigator.pop(context);
-                  } else {
-                    Provider.of<ExercisePickerProvider>(context, listen: false)
-                        .setExercise(Exercise(
-                            name: exerciseController.text,
-                            muscleGroup: muscleGroupController.text,
-                            isExerciseDone: false,
-                            sets: [
-                          for (int i = 0; i < setsCount; i++)
-                            WorkoutSet(
-                                reps:
-                                    int.tryParse(repsControllers[i].text) ?? 0,
-                                weight: double.parse(weightControllers[i]
-                                    .text
-                                    .replaceAll(",", ".")),
-                                isDone: false)
-                        ]));
-                    Navigator.pop(context);
-                  }
-                }
               },
             )
           ]),

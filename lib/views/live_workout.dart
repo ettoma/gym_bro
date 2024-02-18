@@ -11,6 +11,7 @@ import 'package:gym_bro/widgets/live_workout_exercise_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../database/database_utils.dart';
+import '../global/colours.dart';
 import '../widgets/app_bar.dart';
 import '../widgets/live_workout_exercise_tile.dart';
 
@@ -38,6 +39,13 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
   DateTime _initialTime = DateTime.now();
   DateTime _endTime = DateTime.now();
 
+  // @override
+  // void didChangeDependencies() {
+  //   Provider.of<LiveWorkoutProvider>(context, listen: false)
+  //       .setWorkout(widget.workout);
+  //   super.didChangeDependencies();
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +68,7 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
   @override
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
+    Brightness brigthness = MediaQuery.of(context).platformBrightness;
 
     return Scaffold(
       appBar: NavBar(
@@ -95,9 +104,7 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: const Icon(
-                  Icons.play_arrow_rounded,
-                ),
+                icon: const Icon(Icons.play_arrow_rounded, color: Colors.white),
                 onPressed: () {
                   _controller.start();
                 },
@@ -111,6 +118,7 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
               IconButton(
                   icon: const Icon(
                     Icons.stop_rounded,
+                    color: Colors.redAccent,
                   ),
                   onPressed: () {
                     showDialog(
@@ -136,26 +144,32 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
                               ),
                               onPressed: () {
                                 _controller.reset();
-                                DatabaseUtils().saveCompletedWorkout(
-                                    widget.workout, getWorkoutDuration());
-                                Provider.of<DatabaseProvider>(context,
-                                        listen: false)
-                                    .addCompletedWorkoutToList(
-                                        CompletedWorkoutModel(
-                                            id: 1,
-                                            name: widget.workout.name,
-                                            exercises: widget.workout.exercises,
-                                            isFavourite: false,
-                                            completedOn: DateTime.now()
-                                                .toUtc()
-                                                .toString(),
-                                            duration: getWorkoutDuration()));
-                                Provider.of<LiveWorkoutProvider>(context,
-                                        listen: false)
-                                    .clearWorkout(
-                                        widget.workoutExerciseListLength);
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
+                                if (widget.workout.exercises.isEmpty) {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                } else {
+                                  DatabaseUtils().saveCompletedWorkout(
+                                      widget.workout, getWorkoutDuration());
+                                  Provider.of<DatabaseProvider>(context,
+                                          listen: false)
+                                      .addCompletedWorkoutToList(
+                                          CompletedWorkoutModel(
+                                              id: 1,
+                                              name: widget.workout.name,
+                                              exercises:
+                                                  widget.workout.exercises,
+                                              isFavourite: false,
+                                              completedOn: DateTime.now()
+                                                  .toUtc()
+                                                  .toString(),
+                                              duration: getWorkoutDuration()));
+                                  Provider.of<LiveWorkoutProvider>(context,
+                                          listen: false)
+                                      .clearWorkout(
+                                          widget.workoutExerciseListLength);
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                }
                               },
                             ),
                           ],
@@ -166,20 +180,61 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
             ],
           ),
         ),
-        Expanded(child: Consumer<LiveWorkoutProvider>(
-            builder: (context, workoutProvider, _) {
-          return ListView.builder(
-              clipBehavior: Clip.antiAlias,
-              itemCount: workoutProvider.workout!.exercises.length,
-              itemBuilder: (context, index) {
-                return Container(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: LiveWorkoutExerciseTile(
-                      exercise: workoutProvider.workout!.exercises[index],
-                      exerciseIndex: index,
-                    ));
-              });
-        })),
+        Expanded(
+            child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Consumer<LiveWorkoutProvider>(
+              builder: (context, workoutProvider, _) {
+            return ListView.builder(
+                clipBehavior: Clip.antiAlias,
+                itemCount: workoutProvider.workout!.exercises.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
+                          background: stackBehindDismiss(),
+                          child: LiveWorkoutExerciseTile(
+                            exercise: workoutProvider.workout!.exercises[index],
+                            exerciseIndex: index,
+                          ),
+                          confirmDismiss: (direction) async {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    titleTextStyle:
+                                        const TextStyle(fontSize: 18),
+                                    title: const Text(Titles.deleteExercise),
+                                    actions: [
+                                      IconButton(
+                                          icon: const Icon(
+                                            Icons.clear,
+                                            color: Colors.redAccent,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          }),
+                                      IconButton(
+                                          icon: const Icon(
+                                            Icons.check,
+                                          ),
+                                          onPressed: () {
+                                            Provider.of<LiveWorkoutProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .deleteExercise(index);
+                                            Navigator.of(context).pop();
+                                          })
+                                    ],
+                                  );
+                                });
+                            return;
+                          }));
+                });
+          }),
+        )),
         SizedBox(
           height: 80,
           child: ClipRect(
@@ -193,13 +248,40 @@ class _LiveWorkoutPageState extends State<LiveWorkout>
           ),
         )
       ]),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return Dialog(child: LiveWorkoutExercisePicker());
-            });
-      }),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: brigthness == Brightness.dark
+              ? Colors.blueAccent
+              : ColorPalette.lightBox,
+          foregroundColor: brigthness == Brightness.dark
+              ? ColorPalette.lightText
+              : ColorPalette.darkText,
+          elevation: 1,
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(child: LiveWorkoutExercisePicker());
+                });
+          }),
     );
   }
+}
+
+Widget stackBehindDismiss() {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.redAccent,
+    ),
+    alignment: Alignment.centerRight,
+    padding: const EdgeInsets.only(right: 20.0),
+    child: const Icon(
+      Icons.delete,
+      color: Colors.white,
+    ),
+  );
 }

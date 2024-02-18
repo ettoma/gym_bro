@@ -139,9 +139,48 @@ class _QuickStartPageState extends State<QuickWorkout>
               itemBuilder: (context, index) {
                 return Container(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: WorkoutExerciseTile(
-                    exercise: exercisesFromProvider[index],
-                    exerciseIndex: index,
+                  child: Dismissible(
+                    key: UniqueKey(),
+                    dismissThresholds:
+                        Map.from({DismissDirection.endToStart: 0.3}),
+                    direction: DismissDirection.endToStart,
+                    background: stackBehindDismiss(),
+                    child: WorkoutExerciseTile(
+                      exercise: exercisesFromProvider[index],
+                      exerciseIndex: index,
+                    ),
+                    confirmDismiss: (direction) async {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              titleTextStyle: const TextStyle(fontSize: 18),
+                              title: const Text(Titles.deleteExercise),
+                              actions: [
+                                IconButton(
+                                    icon: const Icon(
+                                      Icons.clear,
+                                      color: Colors.redAccent,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    }),
+                                IconButton(
+                                    icon: const Icon(
+                                      Icons.check,
+                                    ),
+                                    onPressed: () {
+                                      Provider.of<QuickWorkoutExercisePickerProvider>(
+                                              context,
+                                              listen: false)
+                                          .deleteExercise(index);
+                                      Navigator.of(context).pop();
+                                    })
+                              ],
+                            );
+                          });
+                      return;
+                    },
                   ),
                 );
               },
@@ -184,4 +223,19 @@ class _QuickStartPageState extends State<QuickWorkout>
           }),
     );
   }
+}
+
+Widget stackBehindDismiss() {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.redAccent,
+    ),
+    alignment: Alignment.centerRight,
+    padding: const EdgeInsets.only(right: 20.0),
+    child: const Icon(
+      Icons.delete,
+      color: Colors.white,
+    ),
+  );
 }
