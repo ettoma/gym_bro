@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gym_bro/global/theme_provider.dart';
 import 'package:gym_bro/views/logs_view.dart';
 import 'package:gym_bro/views/my_workouts.dart';
+import 'package:gym_bro/views/stats_view.dart';
 
 import '../global/text.dart';
-import '../views/profile_view.dart';
 import '../views/quick_workout.dart';
 
 class PageTile extends StatelessWidget {
@@ -50,8 +50,8 @@ Widget _switchPage(String pageTitle) {
       return const MyWorkouts();
     case PageNames.logs:
       return const LogsPage();
-    case PageNames.profile:
-      return const ProfilePage();
+    case PageNames.stats:
+      return const StatsPage();
     case PageNames.quickWorkout:
       return const QuickWorkout();
 

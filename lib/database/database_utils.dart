@@ -290,4 +290,25 @@ class DatabaseUtils {
     }
     return workoutList;
   }
+
+  Future<List<int>> getExerciseData(String exerciseName) async {
+    await initialise();
+
+    final List<Map<String, dynamic>> maps =
+        await database.rawQuery('SELECT * FROM workoutLogs');
+
+    List<int> exerciseWeightList = [];
+
+    for (var w in maps) {
+      for (var e in jsonDecode(w['exercises'])) {
+        if (e['name'] == exerciseName) {
+          for (var s in e['sets']) {
+            exerciseWeightList.add(s['weight'].toInt());
+          }
+        }
+      }
+    }
+    print(exerciseWeightList);
+    return exerciseWeightList;
+  }
 }
